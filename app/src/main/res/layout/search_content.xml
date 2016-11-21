@@ -17,7 +17,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="193dp"
-        android:text="Demonstrate Adding Custom View to Action Bar"
+        android:text="Demonstrating Your Mom"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

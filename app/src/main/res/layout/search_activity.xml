@@ -29,11 +29,16 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="14dp"
                     app:cardElevation="4dp">
+
                     <EditText
+                        android:drawableLeft="@android:drawable/ic_search_category_default"
                         android:id="@+id/test_text"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:textColor="#000000"
+                        android:autoText="false"
+                        android:background="#FFFFFF" />
                 </android.support.v7.widget.CardView>
             </android.support.v7.widget.Toolbar>
 
@@ -41,26 +46,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp">
 
                 <Spinner
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/typeSpinner"
                     android:layout_weight="1"
                     android:popupBackground="@android:color/white" />
 
                 <Spinner
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/cultureSpinner"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:popupBackground="@android:color/white"/>
 
                 <Spinner
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/healthySpinner"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:popupBackground="@android:color/white"/>
 
             </LinearLayout>
 
