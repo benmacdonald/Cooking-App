@@ -25,7 +25,7 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe);
         final ImageButton favouriteButton = (ImageButton) findViewById(R.id.favouriteButton);
 
-        //Set the title of the current activity to the recipe's title
+        //Set the title of the current activity to the recipe's title, only if it exists
         EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
         if (!recipeField.getText().equals("")) {
             getSupportActionBar().setTitle(recipeField.getText());
