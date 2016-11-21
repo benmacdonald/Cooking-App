@@ -31,7 +31,7 @@ public class RecipeActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(recipeField.getText());
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
+//test
         //Add an onClickListener for the favourite button
         //Handles cases for adding and removing the recipe from favourites
         favouriteButton.setOnClickListener(new View.OnClickListener() {
