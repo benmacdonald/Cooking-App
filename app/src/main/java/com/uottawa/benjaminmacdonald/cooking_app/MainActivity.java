@@ -91,13 +91,16 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if(id== R.id.search_button){
+            navToSearchAct();
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
-//    public void navToSearchAct(){
-//        startActivity(new Intent(this,SearchActivity.class));
-//    }
+    public void navToSearchAct(){
+        startActivity(new Intent(this,SearchActivity.class));
+    }
 //
 //    public void navToHelpAct() {
 //        startActivity(new Intent(this,HelpActivity.class));
