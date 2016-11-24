@@ -18,7 +18,8 @@
         android:weightSum="1"
         android:id="@+id/layoutHelpLayout"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp">
 
         <Button
             android:text="@string/FAQ"
@@ -31,6 +32,11 @@
             android:textStyle="normal|bold"
             android:onClick="getFAQ" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="0.06" />
+
         <Button
             android:text="@string/Search"
             android:layout_width="match_parent"
@@ -41,6 +47,11 @@
             android:fontFamily="sans-serif"
             android:textStyle="normal|bold"
             android:onClick="getSearchHelp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="0.06" />
 
         <Button
             android:text="@string/Favoriting"
@@ -53,6 +64,11 @@
             android:textStyle="normal|bold"
             android:onClick="getFavorite" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="0.06" />
+
         <Button
             android:text="@string/AddYourOwnRecipe"
             android:layout_width="match_parent"
@@ -63,6 +79,11 @@
             android:fontFamily="sans-serif"
             android:textStyle="normal|bold"
             android:onClick="getAddOwnRecipe" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="0.06" />
 
         <Button
             android:text="@string/ContactUs"
