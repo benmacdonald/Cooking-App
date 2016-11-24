@@ -1,10 +1,16 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.content.Intent;
-import android.widget.*;
+
+import com.uottawa.benjaminmacdonald.cooking_app.HelpSubActivities.SubactivityAddOwnRecipe;
+import com.uottawa.benjaminmacdonald.cooking_app.HelpSubActivities.SubactivityContact;
+import com.uottawa.benjaminmacdonald.cooking_app.HelpSubActivities.SubactivityFAQ;
+import com.uottawa.benjaminmacdonald.cooking_app.HelpSubActivities.SubactivityFavorite;
+import com.uottawa.benjaminmacdonald.cooking_app.HelpSubActivities.SubactivitySearchHelp;
 
 public class HelpActivity extends AppCompatActivity {
 
@@ -12,6 +18,8 @@ public class HelpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
     }
 
     public void getFAQ(View view)

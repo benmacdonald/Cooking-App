@@ -1,7 +1,9 @@
-package com.uottawa.benjaminmacdonald.cooking_app;
+package com.uottawa.benjaminmacdonald.cooking_app.HelpSubActivities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.uottawa.benjaminmacdonald.cooking_app.R;
 
 public class SubactivityFavorite extends AppCompatActivity {
 
