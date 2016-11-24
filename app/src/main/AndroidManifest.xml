@@ -18,6 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".HelpActivity"
+            android:label="Help" />
+        <activity android:name=".SubactivityFAQ" />
+        <activity android:name=".SubactivitySearchHelp" />
+        <activity android:name=".SubactivityFavorite" />
+        <activity android:name=".SubactivityAddOwnRecipe" />
+        <activity android:name=".SubactivityContact"></activity>
     </application>
 
 </manifest>
