@@ -26,6 +26,10 @@
         <activity android:name=".SubactivityFavorite" />
         <activity android:name=".SubactivityAddOwnRecipe" />
         <activity android:name=".SubactivityContact"></activity>
+        <activity
+            android:name=".SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

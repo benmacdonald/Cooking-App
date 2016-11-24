@@ -6,4 +6,5 @@
     <string name="Favoriting">Favoriting a Recipe</string>
     <string name="AddYourOwnRecipe">Adding Your Own Recipe</string>
     <string name="ContactUs">Contact Us</string>
+    <string name="help_menu">Help</string>
 </resources>

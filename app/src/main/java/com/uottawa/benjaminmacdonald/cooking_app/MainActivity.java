@@ -1,5 +1,6 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -88,10 +89,21 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            navToHelpAct();
+        }
+        if(id== R.id.search_button){
+            navToSearchAct();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void navToSearchAct(){
+        startActivity(new Intent(this,SearchActivity.class));
+    }
+//
+    public void navToHelpAct() {
+        startActivity(new Intent(this,HelpActivity.class));
     }
 
     //FROM STACKOVERFLOW http://stackoverflow.com/questions/5725745/horizontal-scrolling-grid-view
