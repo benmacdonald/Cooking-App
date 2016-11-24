@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            navToHelpAct();
         }
         if(id== R.id.search_button){
             navToSearchAct();
@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this,SearchActivity.class));
     }
 //
-//    public void navToHelpAct() {
-//        startActivity(new Intent(this,HelpActivity.class));
-//    }
+    public void navToHelpAct() {
+        startActivity(new Intent(this,HelpActivity.class));
+    }
 
     //FROM STACKOVERFLOW http://stackoverflow.com/questions/5725745/horizontal-scrolling-grid-view
 
