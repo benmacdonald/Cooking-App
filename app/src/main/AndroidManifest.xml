@@ -19,6 +19,18 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".RecipeActivity"
+            android:label=" "
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.uottawa.benjaminmacdonald.cooking_app.MainActivity"/>
+            <intent-filter>
+                <action android:name="com.google.zxing.client.android.SCAN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".HelpActivity"
             android:label="Help">

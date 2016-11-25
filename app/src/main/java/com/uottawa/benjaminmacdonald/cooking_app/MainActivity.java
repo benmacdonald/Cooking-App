@@ -71,6 +71,15 @@ public class MainActivity extends AppCompatActivity {
 
         RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
         listView.setAdapter(recipeArrayAdapter);
+
+        //Allowing a recipe to be clicked on and navigated to
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                startActivity(new Intent(MainActivity.this, RecipeActivity.class));
+            }
+        });
     }
 
     @Override
