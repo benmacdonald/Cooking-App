@@ -52,7 +52,7 @@
         app:layout_anchorGravity="bottom|right"
         android:layout_margin="@dimen/fab_margin"
         android:layout_marginTop="-10dp"
-        android:src="@android:drawable/ic_menu_gallery" />
+        android:src="@drawable/ic_photo_white_24dp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -89,6 +89,15 @@
                 android:lines="1"
                 android:textSize="26sp" />
 
+            <me.originqiu.library.EditTag
+                android:id="@+id/ingredientsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tag_layout="@layout/view_default_tag"
+                app:input_layout="@layout/view_default_input_tag"
+                android:theme="@style/AppTheme"
+                android:background="@color/bg_tag" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +105,7 @@
                 android:lineSpacingExtra="8dp"
                 android:text="A delicacy crafted by chef Tommy Nguyen himself."
                 android:padding="@dimen/activity_horizontal_margin"
-                />
+                android:id="@+id/textDescription" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

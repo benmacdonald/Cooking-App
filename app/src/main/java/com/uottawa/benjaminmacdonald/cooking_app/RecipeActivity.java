@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+
 import static android.R.drawable.btn_star_big_off;
 import static android.R.drawable.btn_star_big_on;
 
@@ -25,13 +26,14 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe);
         final ImageButton favouriteButton = (ImageButton) findViewById(R.id.favouriteButton);
 
+
         //Set the title of the current activity to the recipe's title, only if it exists
         EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
         if (!recipeField.getText().equals("")) {
             getSupportActionBar().setTitle(recipeField.getText());
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-//test
+
         //Add an onClickListener for the favourite button
         //Handles cases for adding and removing the recipe from favourites
         favouriteButton.setOnClickListener(new View.OnClickListener() {
