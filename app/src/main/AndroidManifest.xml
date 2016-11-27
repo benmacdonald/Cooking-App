@@ -48,6 +48,9 @@
         <activity
             android:name=".SearchActivity"
             android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.uottawa.benjaminmacdonald.cooking_app.MainActivity"/>
         </activity>
 
     </application>

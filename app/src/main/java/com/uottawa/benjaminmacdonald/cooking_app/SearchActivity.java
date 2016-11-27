@@ -2,6 +2,7 @@ package com.uottawa.benjaminmacdonald.cooking_app;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
@@ -9,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
+import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +33,12 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_search);
         setSupportActionBar(toolbar);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         //******************* SETTING UP FLITERS *******************************
         typeArray = new ArrayList<String>();
+        typeArray.add("Type");
         typeArray.add("Breakfast");
         typeArray.add("Lunch");
         typeArray.add("Dinner");
@@ -40,22 +46,24 @@ public class SearchActivity extends AppCompatActivity {
         typeArray.add("Drink");
 
         cultureArray = new ArrayList<String>();
+        cultureArray.add("Category");
         cultureArray.add("Chinese");
         cultureArray.add("Indian");
         cultureArray.add("Italian");
         cultureArray.add("American");
 
         healthyArray = new ArrayList<String>();
+        healthyArray.add("Is Healthy");
         healthyArray.add("Healthy");
         healthyArray.add("Non-healthy");
 
-        ArrayAdapter<String> filterTypeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_item,typeArray);
+        SpinnerArrayAdapter<String> filterTypeAdapter = new SpinnerArrayAdapter(this,typeArray);
         filterTypeAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
-        ArrayAdapter<String> filterCultureAdapter = new ArrayAdapter<String>(this,R.layout.spinner_item,cultureArray);
+        SpinnerArrayAdapter<String> filterCultureAdapter = new SpinnerArrayAdapter(this,cultureArray);
         filterCultureAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
-        ArrayAdapter<String> filterHealthyAdapter = new ArrayAdapter<String>(this,R.layout.spinner_item,healthyArray);
+        SpinnerArrayAdapter<String> filterHealthyAdapter = new SpinnerArrayAdapter(this,healthyArray);
         filterHealthyAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
         Spinner type = (Spinner) findViewById(R.id.typeSpinner);
@@ -79,4 +87,12 @@ public class SearchActivity extends AppCompatActivity {
         RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
         listView.setAdapter(recipeArrayAdapter);
     }
+
+
+    /// ********* METHODS *************************
+
+    public void searchBarOnClick() {
+
+    }
+
 }
