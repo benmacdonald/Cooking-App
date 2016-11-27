@@ -58,27 +58,30 @@
 
                 <Spinner
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/typeSpinner"
                     android:layout_weight="1"
-                    android:popupBackground="@android:color/white"
-                    android:dropDownWidth="fill_parent" />
+                    android:popupBackground="@color/spinnerColor"
+                    android:dropDownWidth="fill_parent"
+                    android:prompt="@string/type"/>
 
                 <Spinner
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/cultureSpinner"
                     android:layout_weight="1"
-                    android:popupBackground="@android:color/white"
-                    android:dropDownWidth="fill_parent" />
+                    android:popupBackground="@color/spinnerColor"
+                    android:dropDownWidth="fill_parent"
+                    android:prompt="@string/category"/>
 
                 <Spinner
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/healthySpinner"
                     android:layout_weight="1"
-                    android:popupBackground="@android:color/white"
-                    android:dropDownWidth="fill_parent" />
+                    android:popupBackground="@color/spinnerColor"
+                    android:dropDownWidth="fill_parent"
+                    android:prompt="@string/healthy"/>
 
             </LinearLayout>
 

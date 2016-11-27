@@ -7,6 +7,8 @@ package com.uottawa.benjaminmacdonald.cooking_app;
 public class Ingredient {
     private String id;
     private String name;
+    private Double amount;
+    private String unitOfMeasurement;
 
 
     //********** CONSTRUCTOR ************
