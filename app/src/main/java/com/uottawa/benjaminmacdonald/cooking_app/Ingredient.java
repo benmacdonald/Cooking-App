@@ -8,7 +8,7 @@ public class Ingredient {
     private String id;
     private String name;
     private Double amount;
-    private String measurement;
+    private String unitOfMeasurement;
 
 
     //********** CONSTRUCTOR ************
