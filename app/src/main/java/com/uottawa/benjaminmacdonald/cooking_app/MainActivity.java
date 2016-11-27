@@ -1,6 +1,8 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    List<String> favourites = new ArrayList<String>();
+    List<Recipe> favourites = new ArrayList<Recipe>();
     List<String> recipes = new ArrayList<String>();
 
     @Override
@@ -45,12 +47,25 @@ public class MainActivity extends AppCompatActivity {
         //*************************Setting up favourite view ***************************************
 
         GridView gridView = (GridView) findViewById(R.id.gridView);
-        favourites = new ArrayList<String>();
+        favourites = new ArrayList<Recipe>();
 
-        for (int i = 0; i<10; i++){
-            favourites.add("Test"+i);
-            recipes.add("Test "+i);
+        // *******FOR UI DEMO ************
+        List<Integer> drawableList = new ArrayList<Integer>();
+        String[] favName = {"Cookies","Hamburger","Burrito"};
+        drawableList.add(R.drawable.cookies);
+        drawableList.add(R.drawable.hamburger);
+        drawableList.add(R.drawable.burrito);
+
+        for (int i = 0; i<10; i++) {
+            if(i < 3){
+                Recipe recipe = new Recipe();
+                recipe.setName(favName[i]);
+                recipe.setPhoto(convertToBitMap(drawableList.get(i)));
+                favourites.add(recipe);
+            }
+            recipes.add("Test " + i);
         }
+        // ******** END UI DEMO **************
 
         FavouriteArrayAdapter favArrayAdapter = new FavouriteArrayAdapter(this,favourites);
         gridView.setAdapter(favArrayAdapter);
@@ -60,9 +75,7 @@ public class MainActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast toast = Toast.makeText(getApplication().getBaseContext(),
-                        String.valueOf(position), Toast.LENGTH_SHORT);
-                toast.show();
+                startActivity(new Intent(MainActivity.this,RecipeActivity.class));
             }
         });
 
@@ -107,13 +120,21 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //***************************** OUR METHODS **************************************
+
+    public Bitmap convertToBitMap(int drawable){
+        return BitmapFactory.decodeResource(getResources(),
+                drawable);
+    }
+
     public void navToSearchAct(){
         startActivity(new Intent(this,SearchActivity.class));
     }
-//
     public void navToHelpAct() {
         startActivity(new Intent(this,HelpActivity.class));
     }
+
+
 
     //FROM STACKOVERFLOW http://stackoverflow.com/questions/5725745/horizontal-scrolling-grid-view
 

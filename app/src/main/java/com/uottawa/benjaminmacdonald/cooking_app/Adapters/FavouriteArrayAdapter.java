@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.uottawa.benjaminmacdonald.cooking_app.R;
+import com.uottawa.benjaminmacdonald.cooking_app.Recipe;
 
 import java.util.List;
 
@@ -18,11 +19,11 @@ import java.util.List;
  * Created by BenjaminMacDonald on 2016-11-11.
  */
 
-public class FavouriteArrayAdapter extends ArrayAdapter<String> { //CHANGE TO RECIPE
+public class FavouriteArrayAdapter extends ArrayAdapter<Recipe> { //CHANGE TO RECIPE
     private final Context context;
-    private final List<String> values;
+    private final List<Recipe> values;
 
-    public FavouriteArrayAdapter(Context context, List<String> values) {
+    public FavouriteArrayAdapter(Context context, List<Recipe> values) {
         super(context, R.layout.recipe_favourite_item_layout,values);
         this.values = values;
         this.context = context;
@@ -34,10 +35,8 @@ public class FavouriteArrayAdapter extends ArrayAdapter<String> { //CHANGE TO RE
         View cardView = inflater.inflate(R.layout.recipe_favourite_item_layout,parent,false);
         TextView nameView = (TextView) cardView.findViewById(R.id.favTextView);
         ImageView imageView = (ImageView) cardView.findViewById(R.id.favouriteImageView);
-        nameView.setText(values.get(position));
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.ic_search_white_36dp);
-        imageView.setImageBitmap(icon);
+        nameView.setText(values.get(position).getName());
+        imageView.setImageBitmap(values.get(position).getPhoto());
 
         return cardView;
     }

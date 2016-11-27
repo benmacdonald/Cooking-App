@@ -1,5 +1,7 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by BenjaminMacDonald on 2016-11-18.
  */
@@ -10,6 +12,7 @@ public class Recipe {
     private Boolean isHealthy;
     private Double preperationTime;
     private Boolean isFavourite;
+    private Bitmap photo;
     //photo - using realm?
 
 
@@ -57,6 +60,13 @@ public class Recipe {
     public Boolean getIsFavourite(){
         return isFavourite;
     }
+    public void setPhoto(Bitmap photo){
+        this.photo = photo;
+    }
+    public Bitmap getPhoto(){
+        return photo;
+    }
+
 
 
 }
