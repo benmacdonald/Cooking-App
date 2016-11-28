@@ -55,16 +55,6 @@
         android:layout_marginTop="-10dp"
         android:src="@drawable/ic_photo_white_24dp" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/favouriteButton"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_anchor="@+id/recipeTitle"
-        app:layout_anchorGravity="center|right"
-        android:src="@android:drawable/btn_star_big_off"
-        android:layout_marginRight="35dp"
-        android:foregroundGravity="top" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -153,5 +143,17 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/favouriteButton"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_anchor="@+id/recipeTitle"
+        app:layout_anchorGravity="center|right"
+        android:src="@android:drawable/btn_star_big_off"
+        android:layout_marginRight="35dp"
+        android:foregroundGravity="top"
+        android:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>

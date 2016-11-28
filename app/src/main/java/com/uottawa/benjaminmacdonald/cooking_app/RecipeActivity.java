@@ -50,10 +50,13 @@ public class RecipeActivity extends AppCompatActivity {
 
         //Figure out it the data is from a cell or the add new recipe button
         String recipe_id = getIntent().getStringExtra("RECIPE_ID");
+        EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
         if(!recipe_id.equals("")){
             isEdit = false;
             //Set the title of the current activity to the recipe's title, only if it exists
-            //TODO:: CHANGE TO RECIPE NAME
+            //TODO:: CHANGE TO RECIPE NAME and change id to an actual id
+            recipeField.setText(recipe_id);
+
             getSupportActionBar().setTitle(recipe_id);
             //TODO:: FILL ALL THE EDIT TEXT WITH VALUES
         } else {
@@ -61,9 +64,6 @@ public class RecipeActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("New Recipe");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //TODO:: ASK ASHWIN ABOUT THIS
-        EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
 
         //Add an onClickListener for the favourite button
         //Handles cases for adding and removing the recipe from favourites
