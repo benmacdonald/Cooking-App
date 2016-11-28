@@ -103,6 +103,9 @@ public class RecipeActivity extends AppCompatActivity {
                 Ingredient ingredient = new Ingredient("Test "+i,(double) i,"mL");
                 ingredientList.add(ingredient);
             }
+        } else {
+            Ingredient ingredient = new Ingredient();
+            ingredientList.add(ingredient);
         }
 
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
