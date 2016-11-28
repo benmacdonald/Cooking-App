@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.uottawa.benjaminmacdonald.cooking_app.MainActivity">
+    <item
+        android:id="@+id/save_button"
+        android:icon="@drawable/ic_done_white_36dp"
+        android:title="save"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/edit_button"
+        android:icon="@drawable/ic_mode_edit_white_24dp"
+        android:title="edit"
+        app:showAsAction="always" />
+</menu>

@@ -1,11 +1,11 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.ArrayAdapter;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -57,13 +57,14 @@ public class SearchActivity extends AppCompatActivity {
         healthyArray.add("Healthy");
         healthyArray.add("Non-healthy");
 
-        SpinnerArrayAdapter<String> filterTypeAdapter = new SpinnerArrayAdapter(this,typeArray);
+        int layout = R.layout.spinner_item_white;
+        SpinnerArrayAdapter<String> filterTypeAdapter = new SpinnerArrayAdapter(this,layout,typeArray);
         filterTypeAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
-        SpinnerArrayAdapter<String> filterCultureAdapter = new SpinnerArrayAdapter(this,cultureArray);
+        SpinnerArrayAdapter<String> filterCultureAdapter = new SpinnerArrayAdapter(this,layout,cultureArray);
         filterCultureAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
-        SpinnerArrayAdapter<String> filterHealthyAdapter = new SpinnerArrayAdapter(this,healthyArray);
+        SpinnerArrayAdapter<String> filterHealthyAdapter = new SpinnerArrayAdapter(this,layout,healthyArray);
         filterHealthyAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
         Spinner type = (Spinner) findViewById(R.id.typeSpinner);
@@ -86,6 +87,18 @@ public class SearchActivity extends AppCompatActivity {
 
         RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
         listView.setAdapter(recipeArrayAdapter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+
+        if(id == android.R.id.home){
+            finish();
+            overridePendingTransition(R.transition.slide_from_left,R.transition.slide_to_right);
+        }
+
+        return  super.onOptionsItemSelected(item);
     }
 
 

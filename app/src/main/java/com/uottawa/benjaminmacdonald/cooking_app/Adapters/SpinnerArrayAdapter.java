@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.uottawa.benjaminmacdonald.cooking_app.R;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,12 +22,11 @@ public class SpinnerArrayAdapter<String> extends ArrayAdapter<String> {
     private final Context context;
     private final List<String> values;
 
-    public SpinnerArrayAdapter(Context context, List<String> values) {
-        super(context,R.layout.spinner_item,values);
+    public SpinnerArrayAdapter(Context context, int layout, List<String> values) {
+        super(context,layout,values);
         this.values = values;
         this.context = context;
     }
-
     @Override
     public boolean isEnabled(int position) {
         if (position == 0) {

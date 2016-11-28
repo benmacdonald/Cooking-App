@@ -39,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with add Recipe", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getBaseContext(), RecipeActivity.class);
+                intent.putExtra("RECIPE_ID", "");
+                startActivity(intent);
             }
         });
 
@@ -75,7 +76,11 @@ public class MainActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this,RecipeActivity.class));
+                //TODO:: CHANGE TO RECIPE ID
+                Intent intent = new Intent(getBaseContext(), RecipeActivity.class);
+                intent.putExtra("RECIPE_ID", favourites.get(position).getName());
+                startActivity(intent);
+
             }
         });
 
@@ -89,8 +94,10 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                startActivity(new Intent(MainActivity.this, RecipeActivity.class));
+                //TODO:: CHANGE TO RECIPE ID
+                Intent intent = new Intent(getBaseContext(), RecipeActivity.class);
+                intent.putExtra("RECIPE_ID", recipes.get(position));
+                startActivity(intent);
             }
         });
     }
@@ -105,11 +112,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             navToHelpAct();
         }
@@ -129,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void navToSearchAct(){
         startActivity(new Intent(this,SearchActivity.class));
+        overridePendingTransition(R.transition.slide_from_right,R.transition.slide_to_left);
     }
     public void navToHelpAct() {
         startActivity(new Intent(this,HelpActivity.class));
@@ -152,6 +157,12 @@ public class MainActivity extends AppCompatActivity {
         ViewGroup.LayoutParams params = gridView.getLayoutParams();
         params.width = totalWidth;
         gridView.setLayoutParams(params);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.transition.slide_from_left,R.transition.slide_to_right);
     }
 
 }
