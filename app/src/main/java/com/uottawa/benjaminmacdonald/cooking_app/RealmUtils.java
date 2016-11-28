@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -44,5 +45,28 @@ public final class RealmUtils {
         byte[] byteArray = stream.toByteArray();
 
         return byteArray;
+    }
+
+    //save recipe to DB
+    public void saveRecipe (Realm realm, Recipe recipe) {
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(recipe);
+        realm.commitTransaction();
+    }
+
+    //save ingredient to DB
+    public void saveIngredient (Realm realm, ArrayList<Ingredient> ingredients) {
+        realm.beginTransaction();
+        for (int i = 0; i<ingredients.size(); i++){
+            realm.copyToRealmOrUpdate(ingredients.get(i));
+        }
+        realm.commitTransaction();
+    }
+
+    public Recipe getRecipeFromID (Realm realm, String recipeID){
+        RealmResults<Recipe>  recipeResult = realm.where(Recipe.class)
+                .equalTo("id", recipeID)
+                .findAll();
+        return realm.copyFromRealm(recipeResult.get(0));
     }
 }

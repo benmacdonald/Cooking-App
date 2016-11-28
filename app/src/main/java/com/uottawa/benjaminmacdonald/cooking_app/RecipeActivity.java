@@ -31,6 +31,9 @@ import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 import static android.R.drawable.btn_star_big_off;
 import static android.R.drawable.btn_star_big_on;
 
@@ -40,11 +43,20 @@ public class RecipeActivity extends AppCompatActivity {
     private IngredientArrayAdapter ingredientArrayAdapter;
     private List<Ingredient> ingredientList;
     boolean isEdit = false;
+    private RealmUtils realmUtils;
+    private Realm realm;
+    private Recipe recipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
+
+        //realm implementation
+        realmUtils = new RealmUtils();
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
+        realm = Realm.getInstance(realmConfiguration);
 
         final ImageButton favouriteButton = (ImageButton) findViewById(R.id.favouriteButton);
 
@@ -53,9 +65,10 @@ public class RecipeActivity extends AppCompatActivity {
         EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
         if(!recipe_id.equals("")){
             isEdit = false;
+            recipe = realmUtils.getRecipeFromID(realm, recipe_id);
             //Set the title of the current activity to the recipe's title, only if it exists
             //TODO:: CHANGE TO RECIPE NAME and change id to an actual id
-            recipeField.setText(recipe_id);
+            recipeField.setText(recipe.getName());
 
             getSupportActionBar().setTitle(recipe_id);
             //TODO:: FILL ALL THE EDIT TEXT WITH VALUES
@@ -158,6 +171,10 @@ public class RecipeActivity extends AppCompatActivity {
         if (id == R.id.save_button) {
             //do save
             changeState(false);
+            updateValues(recipe);
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(recipe);
+            realm.commitTransaction();
         }
         if(id== R.id.edit_button){
             changeState(true);
@@ -215,7 +232,12 @@ public class RecipeActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
+    public void updateValues (Recipe recipe){
+        EditText recipeTitle = (EditText) findViewById(R.id.recipeTitle);
+        recipe.setName(recipeTitle.getText().toString());
 
+
+    }
 
 
     // ************** STACKOVERFLOW METHODS FOR LAYOUT *******************
