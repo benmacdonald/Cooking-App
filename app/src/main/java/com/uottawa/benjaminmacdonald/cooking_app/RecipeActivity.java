@@ -233,10 +233,30 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
     public void updateValues (Recipe recipe){
+        //name
         EditText recipeTitle = (EditText) findViewById(R.id.recipeTitle);
         recipe.setName(recipeTitle.getText().toString());
 
+        //description
+        EditText description = (EditText) findViewById(R.id.textDescription);
+        recipe.setDescription(description.getText().toString());
 
+        //instructions
+        EditText instructions = (EditText) findViewById(R.id.textInstruction);
+        recipe.setInstructions(instructions.getText().toString());
+
+        //ingredients
+        ListView listView = (ListView) findViewById(R.id.ingredientListView);
+
+        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+            View rowView = listView.getChildAt(i);
+            if(rowView != null){
+                EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
+                EditText ingredientAmount = (EditText) rowView.findViewById(R.id.ingredientAmount);
+
+                Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
+            }
+        }
     }
 
 

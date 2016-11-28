@@ -17,6 +17,8 @@ public class Recipe extends RealmObject {
     private Double preparationTime;
     private Boolean isFavourite;
     private byte[] photo;
+    private String description;
+    private String instructions;
     //photo - using realm?
 
 
@@ -78,7 +80,8 @@ public class Recipe extends RealmObject {
     public byte[] getPhoto(){
         return photo;
     }
-
-
-
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getInstructions() { return instructions; }
+    public void setInstructions(String instructions) { this.instructions = instructions; }
 }
