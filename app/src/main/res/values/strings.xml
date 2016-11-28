@@ -11,4 +11,13 @@
     <string name="type">Type</string>
     <string name="category">Category</string>
     <string name="healthy">Is Healthy</string>
+
+    <string-array name="measurementUnits">
+        <item>Units</item>
+        <item>Cups</item>
+        <item>tbsp</item>
+        <item>tsp</item>
+        <item>g</item>
+        <item>mL</item>
+    </string-array>
 </resources>

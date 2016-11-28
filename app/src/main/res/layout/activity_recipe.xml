@@ -19,6 +19,7 @@
         android:layout_height="249dp"
         android:id="@+id/topHeader">
 
+
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing"
             android:layout_width="match_parent"
@@ -54,10 +55,11 @@
         android:layout_marginTop="-10dp"
         android:src="@drawable/ic_photo_white_24dp" />
 
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:orientation="vertical"
@@ -68,7 +70,8 @@
             android:layout_alignParentStart="true"
             android:clickable="true"
             android:focusableInTouchMode="true"
-            android:layout_marginStart="24dp">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
             <TextView
                 android:text="Title"
@@ -86,25 +89,8 @@
                 android:id="@+id/recipeTitle"
                 android:hint="Enter a recipe name"
                 android:lines="1"
-                android:textSize="26sp" />
-
-            <TextView
-                android:text="Ingredients"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/ingredientsLabel"
-                android:textColor="@color/colorAccent"
-                android:layout_marginTop="12dp" />
-
-            <me.originqiu.library.EditTag
-                android:id="@+id/ingredientsList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tag_layout="@layout/view_default_tag"
-                app:input_layout="@layout/view_default_input_tag"
-                android:theme="@style/AppTheme"
-                android:layout_marginBottom="10dp"
-                android:elevation="-24dp" />
+                android:textSize="26sp"
+                android:textColor="@drawable/edit_text_disabled"/>
 
             <TextView
                 android:text="Description"
@@ -114,14 +100,15 @@
                 android:textColor="@color/colorAccent"
                 android:layout_marginTop="12dp" />
 
-            <TextView
+            <EditText
+                android:inputType="textMultiLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:lineSpacingExtra="8dp"
-                android:text="Description"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:id="@+id/textDescription" />
+                android:textSize="18sp"
+                android:hint="delicious cookies ... yummmm"
+                android:id="@+id/textDescription"
+                android:textColor="@drawable/edit_text_disabled"
+                android:textAlignment="viewStart" />
 
             <TextView
                 android:text="Instructions"
@@ -131,20 +118,27 @@
                 android:textColor="@color/colorAccent"
                 android:layout_marginTop="12dp" />
 
-            <TextView
+            <EditText
+                android:id="@+id/textInstruction"
+                android:inputType="textMultiLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:lineSpacingExtra="8dp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nisl erat, lobortis in pretium quis, varius vitae mi. Suspendisse id enim ex. Nam finibus leo non est iaculis, a laoreet metus pellentesque. Nunc tristique massa eu diam elementum rhoncus. Proin tempus tellus nec orci placerat, a ultricies ex pretium. Aliquam erat volutpat. Morbi ultricies rhoncus ante id pulvinar. Duis porta mauris at velit fringilla, eget pharetra tortor condimentum.
+                android:textSize="18sp"
+                android:hint="1. Prepare Oven at 450 degrees fahrenheit"
+                android:textColor="@drawable/edit_text_disabled" />
 
-            Donec dictum justo eu eros iaculis venenatis. Suspendisse ut porttitor risus, ac aliquam nisi. Curabitur euismod congue augue sit amet rutrum. Suspendisse potenti. Pellentesque imperdiet in turpis at lobortis. Nam arcu erat, maximus in ultricies nec, fringilla non eros. Sed sit amet metus faucibus, suscipit nisi ac, vulputate lorem. Proin id luctus justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis pulvinar nibh eu cursus.
+            <TextView
+                android:text="Ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ingredientsLabel"
+                android:textColor="@color/colorAccent"
+                android:layout_marginTop="12dp" />
 
-            Vestibulum egestas turpis nisl, sit amet posuere lacus pulvinar in. Donec ut dictum ex. Vestibulum consectetur laoreet sapien, et sodales augue varius ac. Duis quis porttitor elit. Pellentesque molestie iaculis ante, egestas suscipit nisi facilisis ut. Integer faucibus nisl dui, vitae aliquam mi finibus ac. Sed est ante, aliquam non porttitor eget, suscipit nec metus. Vestibulum non vehicula magna. In efficitur rhoncus nibh quis hendrerit. Donec non ultricies felis, nec eleifend ligula. Integer vitae arcu nunc. Nullam sed facilisis augue. Nulla porttitor tortor id aliquet blandit. Maecenas dapibus feugiat est, sit amet pretium nulla semper non. Cras nisi nunc, sagittis in diam in, fringilla gravida lacus. Etiam sit amet elit mauris.
-
-            Cras id diam id tellus eleifend accumsan. In hac habitasse platea dictumst. Sed quis ipsum congue, ullamcorper est id, ullamcorper magna. Nulla scelerisque, purus non consectetur ullamcorper, urna dolor imperdiet mi, vitae porttitor ipsum lorem nec nunc. Donec ut pretium dolor, vitae pulvinar lorem. Sed lobortis, ex non pellentesque congue, elit sapien consequat turpis, sit amet cursus nulla sem quis mi. Nulla a ornare ante. Vivamus elementum sem nec elit ultrices tempus. Aliquam quis tristique risus. Nam ut nisl pulvinar, condimentum odio a, rhoncus enim. Aliquam id lorem sodales, iaculis ex id, ornare risus. Suspendisse iaculis eu odio ac placerat. Morbi lacinia congue nunc et sagittis. Quisque nec nunc nunc. Maecenas condimentum, nisl in consequat pharetra, turpis augue congue tellus, convallis maximus massa justo a purus."
-                android:padding="@dimen/activity_horizontal_margin"
-                />
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/ingredientListView" />
 
         </LinearLayout>
 
@@ -158,6 +152,8 @@
         app:layout_anchor="@+id/recipeTitle"
         app:layout_anchorGravity="center|right"
         android:src="@android:drawable/btn_star_big_off"
-        android:layout_marginRight="35dp" />
+        android:layout_marginRight="35dp"
+        android:foregroundGravity="top"
+        android:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>
