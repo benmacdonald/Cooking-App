@@ -1,11 +1,17 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
+import java.util.UUID;
+
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by BenjaminMacDonald on 2016-11-18.
  */
 
-public class Ingredient {
-    private String id;
+public class Ingredient extends RealmObject {
+    @PrimaryKey
+    private String id = UUID.randomUUID().toString();
     private String name;
     private Double amount;
     private String unitOfMeasurement;
@@ -13,7 +19,7 @@ public class Ingredient {
 
     //********** CONSTRUCTOR ************
 
-    public Ingredient(String name,Double amount, String unitOfMeasurement){
+    public Ingredient(String name, Double amount, String unitOfMeasurement){
         this.name = name;
         this.amount = amount;
         this.unitOfMeasurement = unitOfMeasurement;
@@ -28,10 +34,6 @@ public class Ingredient {
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {

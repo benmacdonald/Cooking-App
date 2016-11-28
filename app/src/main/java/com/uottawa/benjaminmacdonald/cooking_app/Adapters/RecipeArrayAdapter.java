@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.uottawa.benjaminmacdonald.cooking_app.R;
+import com.uottawa.benjaminmacdonald.cooking_app.Recipe;
 
 import java.util.List;
 
@@ -15,11 +16,11 @@ import java.util.List;
  * Created by BenjaminMacDonald on 2016-11-17.
  */
 
-public class RecipeArrayAdapter extends ArrayAdapter<String> {
+public class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
     private final Context context;
-    private final List<String> values;
+    private final List<Recipe> values;
 
-    public RecipeArrayAdapter(Context context, List<String> values) {
+    public RecipeArrayAdapter(Context context, List<Recipe> values) {
         super(context, R.layout.recipe_item_layout,values);
         this.values = values;
         this.context = context;
@@ -30,7 +31,7 @@ public class RecipeArrayAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View listView = inflater.inflate(R.layout.recipe_item_layout,parent,false);
         TextView nameView = (TextView) listView.findViewById(R.id.recipeTitle);
-        nameView.setText(values.get(position));
+        nameView.setText(values.get(position).getName());
 
         return listView;
     }
