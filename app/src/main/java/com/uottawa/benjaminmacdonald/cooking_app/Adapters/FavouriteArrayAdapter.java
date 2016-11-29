@@ -29,7 +29,7 @@ public class FavouriteArrayAdapter extends ArrayAdapter<Recipe> { //CHANGE TO RE
         super(context, R.layout.recipe_favourite_item_layout,values);
         this.values = values;
         this.context = context;
-        realmUtils = new RealmUtils();
+        realmUtils = new RealmUtils(context);
     }
 
     @Override

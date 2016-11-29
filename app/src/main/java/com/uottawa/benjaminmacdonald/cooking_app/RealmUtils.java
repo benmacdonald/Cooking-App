@@ -1,12 +1,15 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -15,22 +18,31 @@ import io.realm.RealmResults;
 
 public final class RealmUtils {
 
-    public RealmUtils(){}
+    private Realm realm;
+
+    public RealmUtils(Context context){
+        Realm.init(context);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
+        realm = Realm.getInstance(realmConfiguration);
+    }
 
 
     //Finds all the recipes that are favoured in realm
-    public RealmResults<Recipe> queryFavouriteRecipes(Realm realm){
+    public List<Recipe> queryFavouriteRecipes(){
+
         RealmResults<Recipe>  favResult = realm.where(Recipe.class)
                 .equalTo("isFavourite",true)
                 .findAll();
 
-        return favResult;
+        return realm.copyFromRealm(favResult);
     }
     //Finds all the recipes in realm
-    public RealmResults<Recipe> queryAllRecipes(Realm realm){
+    public List<Recipe> queryAllRecipes(){
+
         RealmResults<Recipe> queryRecipes = realm.where(Recipe.class)
                 .findAll();
-        return  queryRecipes;
+
+        return  realm.copyFromRealm(queryRecipes);
     }
 
     //converts byte array to bitmap
@@ -48,14 +60,14 @@ public final class RealmUtils {
     }
 
     //save recipe to DB
-    public void saveRecipe (Realm realm, Recipe recipe) {
+    public void saveRecipe (Recipe recipe) {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(recipe);
         realm.commitTransaction();
     }
 
     //save ingredient to DB
-    public void saveIngredient (Realm realm, ArrayList<Ingredient> ingredients) {
+    public void saveIngredient (ArrayList<Ingredient> ingredients) {
         realm.beginTransaction();
         for (int i = 0; i<ingredients.size(); i++){
             realm.copyToRealmOrUpdate(ingredients.get(i));
@@ -63,7 +75,16 @@ public final class RealmUtils {
         realm.commitTransaction();
     }
 
-    public Recipe getRecipeFromID (Realm realm, String recipeID){
+    //get indredientList from recipeID
+    public RealmResults<Ingredient> getIngredientsFromRecipeID(String recipeID){
+
+        RealmResults<Ingredient> ingredientResults = realm.where(Ingredient.class)
+                .equalTo("recipeID",recipeID)
+                .findAll();
+        return ingredientResults;
+    }
+
+    public Recipe getRecipeFromID (String recipeID){
         RealmResults<Recipe>  recipeResult = realm.where(Recipe.class)
                 .equalTo("id", recipeID)
                 .findAll();

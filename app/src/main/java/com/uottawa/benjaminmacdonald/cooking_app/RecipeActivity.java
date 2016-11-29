@@ -44,7 +44,6 @@ public class RecipeActivity extends AppCompatActivity {
     private List<Ingredient> ingredientList;
     boolean isEdit = false;
     private RealmUtils realmUtils;
-    private Realm realm;
     private Recipe recipe;
 
     @Override
@@ -53,19 +52,18 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe);
 
         //realm implementation
-        realmUtils = new RealmUtils();
-        Realm.init(this);
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
-        realm = Realm.getInstance(realmConfiguration);
+        realmUtils = new RealmUtils(this);
 
         final ImageButton favouriteButton = (ImageButton) findViewById(R.id.favouriteButton);
 
         //Figure out it the data is from a cell or the add new recipe button
         String recipe_id = getIntent().getStringExtra("RECIPE_ID");
+        //Initialize all the fields
         EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
         if(!recipe_id.equals("")){
             isEdit = false;
-            recipe = realmUtils.getRecipeFromID(realm, recipe_id);
+            recipe = realmUtils.getRecipeFromID(recipe_id);
+            ingredientList = realmUtils.getIngredientsFromRecipeID(recipe_id);
             //Set the title of the current activity to the recipe's title, only if it exists
             //TODO:: CHANGE TO RECIPE NAME and change id to an actual id
             recipeField.setText(recipe.getName());
@@ -108,18 +106,7 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
-        //**** TESTING INGREDIENT LIST *****
-
-        ingredientList = new ArrayList<Ingredient>();
-        if(!isEdit){
-            for(int i=0; i<3;i++){
-                Ingredient ingredient = new Ingredient("Test "+i,(double) i,"mL");
-                ingredientList.add(ingredient);
-            }
-        } else {
-            Ingredient ingredient = new Ingredient();
-            ingredientList.add(ingredient);
-        }
+        //**** Setting up ingredient list **********************************************************
 
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
 
@@ -172,9 +159,7 @@ public class RecipeActivity extends AppCompatActivity {
             //do save
             changeState(false);
             updateValues(recipe);
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(recipe);
-            realm.commitTransaction();
+            realmUtils.saveRecipe(recipe);
         }
         if(id== R.id.edit_button){
             changeState(true);
@@ -247,16 +232,16 @@ public class RecipeActivity extends AppCompatActivity {
 
         //ingredients
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
-
-        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
-            View rowView = listView.getChildAt(i);
-            if(rowView != null){
-                EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
-                EditText ingredientAmount = (EditText) rowView.findViewById(R.id.ingredientAmount);
-
-                Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
-            }
-        }
+//
+//        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+//            View rowView = listView.getChildAt(i);
+//            if(rowView != null){
+//                EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
+//                EditText ingredientAmount = (EditText) rowView.findViewById(R.id.ingredientAmount);
+//
+//                Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
+//            }
+//        }
     }
 
 

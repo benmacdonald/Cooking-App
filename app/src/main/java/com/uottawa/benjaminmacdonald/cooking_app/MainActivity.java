@@ -32,7 +32,6 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity {
     List<Recipe> favourites = new ArrayList<Recipe>();
     List<Recipe> recipes = new ArrayList<Recipe>();
-    private Realm realm; //used for database queries and writes
     private RealmUtils realmUtils;
 
     @Override
@@ -53,10 +52,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //********************* SET UP REALM OBJECT ************************************************
-        realmUtils = new RealmUtils();
-        Realm.init(this);
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
-        realm = Realm.getInstance(realmConfiguration);
+        realmUtils = new RealmUtils(this);
 
         //******************** WRITING TO REALM (FIRST STARTUP ONLY) *******************************
 //        List<Integer> drawableList = new ArrayList<Integer>();
@@ -81,12 +77,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        System.out.println("path: " + realm.getPath());
-
         //********************* Query favourite recipes and all recipes ****************************
 
-        favourites = realm.copyFromRealm(realmUtils.queryFavouriteRecipes(realm));
-        recipes = realm.copyFromRealm(realmUtils.queryAllRecipes(realm));
+        favourites = realmUtils.queryFavouriteRecipes();
+        recipes = realmUtils.queryAllRecipes();
 
         //*************************Setting up favourite view ***************************************
 
