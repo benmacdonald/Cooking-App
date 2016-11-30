@@ -24,9 +24,15 @@ import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 public class MainActivity extends AppCompatActivity {
     List<Recipe> favourites = new ArrayList<Recipe>();
-    List<String> recipes = new ArrayList<String>();
+    List<Recipe> recipes = new ArrayList<Recipe>();
+    private RealmUtils realmUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,40 +51,53 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //********************* SET UP REALM OBJECT ************************************************
+        realmUtils = new RealmUtils(this);
+
+        //******************** WRITING TO REALM (FIRST STARTUP ONLY) *******************************
+//        List<Integer> drawableList = new ArrayList<Integer>();
+//        String[] favName = {"Cookies","Hamburger","Burrito"};
+//        drawableList.add(R.drawable.cookies);
+//        drawableList.add(R.drawable.hamburger);
+//        drawableList.add(R.drawable.burrito);
+//
+//        for (int i = 0; i<10; i++) {
+//            if(i < 3){
+//                Recipe recipe = new Recipe();
+//                recipe.setName(favName[i]);
+//                recipe.setPhoto(realmUtils.convertToByteArray(convertToBitMap(drawableList.get(i))));
+//                if(i<2){
+//                    recipe.setIsFavourite(true);
+//                }
+//                realmUtils.saveRecipe(recipe);
+//            }
+//        }
+
+
+
+        //********************* Query favourite recipes and all recipes ****************************
+
+        favourites = realmUtils.queryFavouriteRecipes();
+        recipes = realmUtils.queryAllNonFavourite();
+
         //*************************Setting up favourite view ***************************************
 
         GridView gridView = (GridView) findViewById(R.id.gridView);
-        favourites = new ArrayList<Recipe>();
 
-        // *******FOR UI DEMO ************
-        List<Integer> drawableList = new ArrayList<Integer>();
-        String[] favName = {"Cookies","Hamburger","Burrito"};
-        drawableList.add(R.drawable.cookies);
-        drawableList.add(R.drawable.hamburger);
-        drawableList.add(R.drawable.burrito);
-
-        for (int i = 0; i<10; i++) {
-            if(i < 3){
-                Recipe recipe = new Recipe();
-                recipe.setName(favName[i]);
-                recipe.setPhoto(convertToBitMap(drawableList.get(i)));
-                favourites.add(recipe);
-            }
-            recipes.add("Test " + i);
-        }
-        // ******** END UI DEMO **************
 
         FavouriteArrayAdapter favArrayAdapter = new FavouriteArrayAdapter(this,favourites);
         gridView.setAdapter(favArrayAdapter);
         gridView.setNumColumns(favourites.size());
-        setDynamicWidth(gridView);
+        if(favourites.size() > 0){
+            setDynamicWidth(gridView);
+        }
         gridView.setDrawSelectorOnTop(true);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO:: CHANGE TO RECIPE ID
                 Intent intent = new Intent(getBaseContext(), RecipeActivity.class);
-                intent.putExtra("RECIPE_ID", favourites.get(position).getName());
+                intent.putExtra("RECIPE_ID", favourites.get(position).getId());
                 startActivity(intent);
 
             }
@@ -96,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO:: CHANGE TO RECIPE ID
                 Intent intent = new Intent(getBaseContext(), RecipeActivity.class);
-                intent.putExtra("RECIPE_ID", recipes.get(position));
+                intent.putExtra("RECIPE_ID", recipes.get(position).getId());
                 startActivity(intent);
             }
         });
@@ -140,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //********************* STACK OVERFLOW METHODS *************************************************
 
     //FROM STACKOVERFLOW http://stackoverflow.com/questions/5725745/horizontal-scrolling-grid-view
 

@@ -45,11 +45,16 @@ public class IngredientArrayAdapter extends ArrayAdapter<Ingredient> {
                 new SpinnerArrayAdapter<String>(context,R.layout.spinner_item_black,measurementUnit);
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
         spinner.setAdapter(spinnerArrayAdapter);
-
+        String unitValue = values.get(position).getUnitOfMeasurement();
+        if(unitValue != "Units" && unitValue != ""){
+            spinner.setSelection(measurementUnit.indexOf(values.get(position).getUnitOfMeasurement()));
+        }
+        spinner.requestLayout(); //used to fix layout issues when manually selecting spinner element
 
 
         EditText nameView = (EditText) listView.findViewById(R.id.ingredientTitle);
         nameView.setText(values.get(position).getName());
+
 
         return listView;
     }

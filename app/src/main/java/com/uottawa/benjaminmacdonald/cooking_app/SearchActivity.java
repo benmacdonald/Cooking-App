@@ -85,8 +85,8 @@ public class SearchActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.recipeListView);
 
-        RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
-        listView.setAdapter(recipeArrayAdapter);
+//        RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
+//        listView.setAdapter(recipeArrayAdapter);
     }
 
     @Override

@@ -1,24 +1,39 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
-import android.graphics.Bitmap;
+import java.util.UUID;
+
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by BenjaminMacDonald on 2016-11-18.
  */
 
-public class Recipe {
-    private final String id;
+public class Recipe extends RealmObject {
+    @PrimaryKey
+    private String id = UUID.randomUUID().toString();
     private String name;
     private Boolean isHealthy;
-    private Double preperationTime;
+    private Double preparationTime;
     private Boolean isFavourite;
-    private Bitmap photo;
+    private byte[] photo;
+    private String description;
+    private String instructions;
     //photo - using realm?
 
 
     //******* CONSTRUCTORS ****************
+    public Recipe(String name, Boolean isHealthy, Double preparationTime, Boolean isFavourite, byte[] photo){
+        this.name = name;
+        this.isHealthy = isHealthy;
+        this.preparationTime = preparationTime;
+        this.isFavourite = isFavourite;
+        this.photo = photo;
+    }
+
     public Recipe(){
-        id = ""; //CREATE RANDOM ID
+        this.name = "";
+        isFavourite = false;
     }
 
 
@@ -48,11 +63,11 @@ public class Recipe {
     public Boolean getIsHealthy(){
         return isHealthy;
     }
-    public void setPreperationTime(Double preperationTime){
-        this.preperationTime = preperationTime;
+    public void setPreparationTime(Double preparationTime){
+        this.preparationTime = preparationTime;
     }
-    public Double getPreperationTime(){
-        return preperationTime;
+    public Double getPreparationTime(){
+        return preparationTime;
     }
     public void setIsFavourite(Boolean isFavourite){
         this.isFavourite = isFavourite;
@@ -60,13 +75,14 @@ public class Recipe {
     public Boolean getIsFavourite(){
         return isFavourite;
     }
-    public void setPhoto(Bitmap photo){
+    public void setPhoto(byte[] photo){
         this.photo = photo;
     }
-    public Bitmap getPhoto(){
+    public byte[] getPhoto(){
         return photo;
     }
-
-
-
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getInstructions() { return instructions; }
+    public void setInstructions(String instructions) { this.instructions = instructions; }
 }

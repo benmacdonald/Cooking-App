@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.uottawa.benjaminmacdonald.cooking_app.R;
+import com.uottawa.benjaminmacdonald.cooking_app.RealmUtils;
 import com.uottawa.benjaminmacdonald.cooking_app.Recipe;
 
 import java.util.List;
@@ -22,11 +23,13 @@ import java.util.List;
 public class FavouriteArrayAdapter extends ArrayAdapter<Recipe> { //CHANGE TO RECIPE
     private final Context context;
     private final List<Recipe> values;
+    private RealmUtils realmUtils;
 
     public FavouriteArrayAdapter(Context context, List<Recipe> values) {
         super(context, R.layout.recipe_favourite_item_layout,values);
         this.values = values;
         this.context = context;
+        realmUtils = new RealmUtils(context);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class FavouriteArrayAdapter extends ArrayAdapter<Recipe> { //CHANGE TO RE
         TextView nameView = (TextView) cardView.findViewById(R.id.favTextView);
         ImageView imageView = (ImageView) cardView.findViewById(R.id.favouriteImageView);
         nameView.setText(values.get(position).getName());
-        imageView.setImageBitmap(values.get(position).getPhoto());
+        imageView.setImageBitmap(realmUtils.convertToBitmap(values.get(position).getPhoto()));
 
         return cardView;
     }
