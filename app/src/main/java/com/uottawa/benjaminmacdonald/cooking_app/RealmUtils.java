@@ -45,6 +45,16 @@ public final class RealmUtils {
         return  realm.copyFromRealm(queryRecipes);
     }
 
+    //Finds all non favourites
+    public List<Recipe> queryAllNonFavourite(){
+
+        RealmResults<Recipe> query = realm.where(Recipe.class)
+                .equalTo("isFavourite",false)
+                .findAll();
+        return realm.copyFromRealm(query);
+    }
+
+
     //converts byte array to bitmap
     public Bitmap convertToBitmap(byte[] byteArray){
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
@@ -67,7 +77,7 @@ public final class RealmUtils {
     }
 
     //save ingredient to DB
-    public void saveIngredient (ArrayList<Ingredient> ingredients) {
+    public void saveIngredient (List<Ingredient> ingredients) {
         realm.beginTransaction();
         for (int i = 0; i<ingredients.size(); i++){
             realm.copyToRealmOrUpdate(ingredients.get(i));
@@ -76,12 +86,12 @@ public final class RealmUtils {
     }
 
     //get indredientList from recipeID
-    public RealmResults<Ingredient> getIngredientsFromRecipeID(String recipeID){
+    public List<Ingredient> getIngredientsFromRecipeID(String recipeID){
 
         RealmResults<Ingredient> ingredientResults = realm.where(Ingredient.class)
-                .equalTo("recipeID",recipeID)
+                .equalTo("recipeId",recipeID)
                 .findAll();
-        return ingredientResults;
+        return realm.copyFromRealm(ingredientResults);
     }
 
     public Recipe getRecipeFromID (String recipeID){

@@ -33,6 +33,7 @@ public class Recipe extends RealmObject {
 
     public Recipe(){
         this.name = "";
+        isFavourite = false;
     }
 
 

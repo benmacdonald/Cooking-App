@@ -2,6 +2,7 @@ package com.uottawa.benjaminmacdonald.cooking_app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -45,6 +47,7 @@ public class RecipeActivity extends AppCompatActivity {
     boolean isEdit = false;
     private RealmUtils realmUtils;
     private Recipe recipe;
+    private String recipeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,22 +60,29 @@ public class RecipeActivity extends AppCompatActivity {
         final ImageButton favouriteButton = (ImageButton) findViewById(R.id.favouriteButton);
 
         //Figure out it the data is from a cell or the add new recipe button
-        String recipe_id = getIntent().getStringExtra("RECIPE_ID");
+        recipeId = getIntent().getStringExtra("RECIPE_ID");
         //Initialize all the fields
+        ImageView imageView = (ImageView) findViewById(R.id.recipeImage);
         EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
-        if(!recipe_id.equals("")){
+        EditText recipeDescription = (EditText) findViewById(R.id.textDescription);
+        EditText recipeInstruction = (EditText) findViewById(R.id.textInstruction);
+        if(!recipeId.equals("")){
             isEdit = false;
-            recipe = realmUtils.getRecipeFromID(recipe_id);
-            ingredientList = realmUtils.getIngredientsFromRecipeID(recipe_id);
+            recipe = realmUtils.getRecipeFromID(recipeId);
+            ingredientList = realmUtils.getIngredientsFromRecipeID(recipeId);
             //Set the title of the current activity to the recipe's title, only if it exists
-            //TODO:: CHANGE TO RECIPE NAME and change id to an actual id
+            getSupportActionBar().setTitle(recipe.getName());
+            imageView.setImageBitmap(realmUtils.convertToBitmap(recipe.getPhoto()));
             recipeField.setText(recipe.getName());
-
-            getSupportActionBar().setTitle(recipe_id);
-            //TODO:: FILL ALL THE EDIT TEXT WITH VALUES
+            recipeDescription.setText(recipe.getDescription());
+            recipeInstruction.setText(recipe.getInstructions());
         } else {
             isEdit = true;
             getSupportActionBar().setTitle("New Recipe");
+            recipe = new Recipe();
+            recipeId = recipe.getId();
+            ingredientList = new ArrayList<Ingredient>();
+            ingredientList.add(new Ingredient(recipeId));
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -84,13 +94,14 @@ public class RecipeActivity extends AppCompatActivity {
                 if (!isFavourite) {
                     isFavourite = true;
                     favouriteButton.setImageResource(btn_star_big_on);
-                    Toast.makeText(getApplicationContext(), "Added recipe to favourites", Toast.LENGTH_SHORT).show();
+                    recipe.setIsFavourite(true);
                 }
                 else {
                     isFavourite = false;
                     favouriteButton.setImageResource(btn_star_big_off);
-                    Toast.makeText(getApplicationContext(), "Removed recipe from favourites", Toast.LENGTH_SHORT).show();
+                    recipe.setIsFavourite(false);
                 }
+                realmUtils.saveRecipe(recipe);
             }
         });
 
@@ -159,7 +170,6 @@ public class RecipeActivity extends AppCompatActivity {
             //do save
             changeState(false);
             updateValues(recipe);
-            realmUtils.saveRecipe(recipe);
         }
         if(id== R.id.edit_button){
             changeState(true);
@@ -178,7 +188,20 @@ public class RecipeActivity extends AppCompatActivity {
 
     public void addIngredientRow(){
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
-        ingredientList.add(new Ingredient());
+        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+            View rowView = listView.getChildAt(i);
+            if(rowView != null){
+                EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
+                EditText ingredientAmount = (EditText) rowView.findViewById(R.id.ingredientAmount);
+                Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
+                if(ingredientTitle.getText().toString() != ""){
+                    ingredientList.get(i).setName(ingredientTitle.getText().toString());
+                    ingredientList.get(i).setAmount(Double.parseDouble(ingredientAmount.getText().toString()));
+                    ingredientList.get(i).setUnitOfMeasurement(spinner.getSelectedItem().toString());
+                }
+            }
+        }
+        ingredientList.add(new Ingredient(recipeId));
         ingredientArrayAdapter.notifyDataSetChanged();
         setListViewHeightBasedOnChildren(listView);
     }
@@ -218,6 +241,10 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
     public void updateValues (Recipe recipe){
+        //Image
+        ImageView imageView = (ImageView) findViewById(R.id.recipeImage);
+        recipe.setPhoto(realmUtils.convertToByteArray(((BitmapDrawable)imageView.getDrawable()).getBitmap()));
+
         //name
         EditText recipeTitle = (EditText) findViewById(R.id.recipeTitle);
         recipe.setName(recipeTitle.getText().toString());
@@ -232,16 +259,22 @@ public class RecipeActivity extends AppCompatActivity {
 
         //ingredients
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
-//
+
 //        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
-//            View rowView = listView.getChildAt(i);
-//            if(rowView != null){
-//                EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
-//                EditText ingredientAmount = (EditText) rowView.findViewById(R.id.ingredientAmount);
-//
-//                Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
-//            }
+            View rowView = listView.getChildAt(listView.getLastVisiblePosition()-1);
+            if(rowView != null){
+                EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
+                EditText ingredientAmount = (EditText) rowView.findViewById(R.id.ingredientAmount);
+                Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
+//                if(ingredientTitle.getText().toString() != ""){
+                    ingredientList.get(ingredientList.size()-1).setName(ingredientTitle.getText().toString());
+                    ingredientList.get(ingredientList.size()-1).setAmount(Double.parseDouble(ingredientAmount.getText().toString()));
+                    ingredientList.get(ingredientList.size()-1).setUnitOfMeasurement(spinner.getSelectedItem().toString());
+//                }
+            }
 //        }
+        realmUtils.saveRecipe(recipe);
+        realmUtils.saveIngredient(ingredientList);
     }
 
 

@@ -69,9 +69,7 @@ public class MainActivity extends AppCompatActivity {
 //                if(i<2){
 //                    recipe.setIsFavourite(true);
 //                }
-//                realm.beginTransaction();
-//                realm.copyToRealm(recipe);
-//                realm.commitTransaction();
+//                realmUtils.saveRecipe(recipe);
 //            }
 //        }
 
@@ -80,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         //********************* Query favourite recipes and all recipes ****************************
 
         favourites = realmUtils.queryFavouriteRecipes();
-        recipes = realmUtils.queryAllRecipes();
+        recipes = realmUtils.queryAllNonFavourite();
 
         //*************************Setting up favourite view ***************************************
 
@@ -90,14 +88,16 @@ public class MainActivity extends AppCompatActivity {
         FavouriteArrayAdapter favArrayAdapter = new FavouriteArrayAdapter(this,favourites);
         gridView.setAdapter(favArrayAdapter);
         gridView.setNumColumns(favourites.size());
-        setDynamicWidth(gridView);
+        if(favourites.size() > 0){
+            setDynamicWidth(gridView);
+        }
         gridView.setDrawSelectorOnTop(true);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO:: CHANGE TO RECIPE ID
                 Intent intent = new Intent(getBaseContext(), RecipeActivity.class);
-                intent.putExtra("RECIPE_ID", favourites.get(position).getName());
+                intent.putExtra("RECIPE_ID", favourites.get(position).getId());
                 startActivity(intent);
 
             }
