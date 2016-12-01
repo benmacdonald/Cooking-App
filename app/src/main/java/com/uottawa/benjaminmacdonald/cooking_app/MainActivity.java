@@ -3,10 +3,8 @@ package com.uottawa.benjaminmacdonald.cooking_app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,18 +15,13 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.FavouriteArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmConfiguration;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {

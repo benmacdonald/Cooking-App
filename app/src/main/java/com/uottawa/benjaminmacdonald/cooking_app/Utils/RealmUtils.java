@@ -1,18 +1,26 @@
-package com.uottawa.benjaminmacdonald.cooking_app;
+package com.uottawa.benjaminmacdonald.cooking_app.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 
+import com.uottawa.benjaminmacdonald.cooking_app.Ingredient;
+import com.uottawa.benjaminmacdonald.cooking_app.Recipe;
+import com.uottawa.benjaminmacdonald.cooking_app.RecipeCategory;
+import com.uottawa.benjaminmacdonald.cooking_app.RecipeType;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+
 
 /**
  * Created by BenjaminMacDonald on 2016-11-28.
@@ -25,6 +33,8 @@ public final class RealmUtils {
     public RealmUtils(Context context){
         realm = Realm.getDefaultInstance();
     }
+
+    //******************************** RECIPE CLASS ************************************************
 
 
     //Finds all the recipes that are favoured in realm
@@ -91,7 +101,8 @@ public final class RealmUtils {
 
     //saves recipe
     public void updateRecipe(final String id, final String name, final Boolean isHealthy, final Boolean isFavourite,
-                             final Bitmap photo, final String description, final String instruction){
+                             final Bitmap photo, final String description, final String instruction,
+                                final String typeId, final String catId){
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm){
@@ -103,34 +114,11 @@ public final class RealmUtils {
                     recipe.setPhoto(convertToByteArray(photo));
                     recipe.setDescription(description);
                     recipe.setInstructions(instruction);
+                    recipe.setRecipeType(typeId);
+                    recipe.setRecipeCategory(catId);
                 }
             }
         });
-    }
-
-    //save ingredient to DB
-    public void saveIngredient (List<Ingredient> ingredients) {
-        realm.beginTransaction();
-        for (int i = 0; i<ingredients.size(); i++){
-            realm.copyToRealmOrUpdate(ingredients.get(i));
-        }
-        realm.commitTransaction();
-    }
-
-//    public void saveIngredient(String name, Double amount, String unit, String recipeId){
-//        realm.executeTransactionAsync(new Realm.Transaction() {
-//
-//        });
-//
-//    }
-
-    //get indredientList from recipeID
-    public List<Ingredient> getIngredientsFromRecipeID(String recipeID){
-
-        RealmResults<Ingredient> ingredientResults = realm.where(Ingredient.class)
-                .equalTo("recipeId",recipeID)
-                .findAll();
-        return realm.copyFromRealm(ingredientResults);
     }
 
     @Nullable
@@ -168,4 +156,83 @@ public final class RealmUtils {
 
         });
     }
+
+
+    //******************************** INGREDIENT CLASS ********************************************
+
+    //save ingredient to DB
+    public void saveIngredient (List<Ingredient> ingredients) {
+        realm.beginTransaction();
+        for (int i = 0; i<ingredients.size(); i++){
+            realm.copyToRealmOrUpdate(ingredients.get(i));
+        }
+        realm.commitTransaction();
+    }
+
+    //get indredientList from recipeID
+    public List<Ingredient> getIngredientsFromRecipeID(String recipeID){
+
+        RealmResults<Ingredient> ingredientResults = realm.where(Ingredient.class)
+                .equalTo("recipeId",recipeID)
+                .findAll();
+        return realm.copyFromRealm(ingredientResults);
+    }
+
+
+    // **************************** TYPE CLASS *****************************************************
+
+    @Nullable
+    public String getTypeIDFromName(String name){
+        RecipeType query = realm.where(RecipeType.class)
+                .equalTo("name",name, Case.INSENSITIVE)
+                .findFirst();
+        if(query!=null){
+            return query.getId();
+        }
+        return null;
+
+    }
+
+    public RecipeType getTypeFromId(String id){
+        RealmResults<RecipeType> query = realm.where(RecipeType.class)
+                .equalTo("id",id)
+                .findAll();
+        return  query.get(0);
+    }
+
+    public void createType(final String name){
+        realm.beginTransaction();
+        RecipeType recipeType = realm.createObject(RecipeType.class, UUID.randomUUID().toString());
+        recipeType.setName(name);
+        realm.commitTransaction();
+    }
+
+
+    //******************************** CATEGORY CLASS **********************************************
+
+    public String getCategoryIDFromName(String name){
+        RecipeCategory query = realm.where(RecipeCategory.class)
+                .equalTo("name",name, Case.INSENSITIVE)
+                .findFirst();
+        if(query != null){
+            return query.getId();
+        }
+        return null;
+    }
+
+    public RecipeCategory getCategoryFromId(String id){
+        RealmResults<RecipeCategory> query = realm.where(RecipeCategory.class)
+//                .equalTo("id",id)
+                .findAll();
+        return query.get(0);
+    }
+
+    public void createCategory(final String name){
+        realm.beginTransaction();
+        RecipeCategory recipeCategory = realm.createObject(RecipeCategory.class, UUID.randomUUID().toString());
+        recipeCategory.setName(name);
+        realm.commitTransaction();
+    }
+
+
 }

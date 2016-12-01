@@ -24,6 +24,8 @@ public class RecipeCategory extends RealmObject {
 
     //*************************** SETTERS AND GETTERS **********************************************
 
+
+    public String getId() { return  id; }
     public String getName() {
         return name;
     }

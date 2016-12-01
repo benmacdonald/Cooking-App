@@ -2,9 +2,7 @@ package com.uottawa.benjaminmacdonald.cooking_app.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.AsyncTask;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.uottawa.benjaminmacdonald.cooking_app.Helpers.LruBitmapCache;
+import com.uottawa.benjaminmacdonald.cooking_app.Cache.LruBitmapCache;
 import com.uottawa.benjaminmacdonald.cooking_app.R;
-import com.uottawa.benjaminmacdonald.cooking_app.RealmUtils;
+import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 import com.uottawa.benjaminmacdonald.cooking_app.Recipe;
-
-import java.util.ArrayList;
 
 import io.realm.RealmResults;
 
@@ -48,8 +44,6 @@ public class FavouriteArrayAdapter extends ArrayAdapter<Recipe>  { //CHANGE TO R
         ImageView imageView = (ImageView) cardView.findViewById(R.id.favouriteImageView);
         ConvertToBitmapTask cv = new ConvertToBitmapTask(values.get(position).getPhoto(),imageView);
         cv.execute(values.get(position).getId());
-        System.out.println(values.size());
-        System.out.println(values.get(position).getName());
         return cardView;
     }
 

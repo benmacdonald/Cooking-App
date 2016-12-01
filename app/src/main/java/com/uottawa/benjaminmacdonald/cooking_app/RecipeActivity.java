@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,19 +19,13 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.Toast;
 
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.IngredientArrayAdapter;
-import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
-import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
+import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 import static android.R.drawable.btn_star_big_off;
 import static android.R.drawable.btn_star_big_on;
@@ -67,16 +57,26 @@ public class RecipeActivity extends AppCompatActivity {
         EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
         EditText recipeDescription = (EditText) findViewById(R.id.textDescription);
         EditText recipeInstruction = (EditText) findViewById(R.id.textInstruction);
+        EditText recipeType = (EditText) findViewById(R.id.typeText);
+        EditText recipeCat = (EditText) findViewById(R.id.categoryText);
         if(!recipeId.equals("")){
             isEdit = false;
             recipe = realmUtils.getRecipeFromID(recipeId);
             ingredientList = realmUtils.getIngredientsFromRecipeID(recipeId);
             //Set the title of the current activity to the recipe's title, only if it exists
+            RecipeType type = realmUtils.getTypeFromId(recipe.getRecipeType());
+            RecipeCategory category = realmUtils.getCategoryFromId(recipe.getRecipeCategory());
             getSupportActionBar().setTitle(recipe.getName());
             imageView.setImageBitmap(realmUtils.convertToBitmap(recipe.getPhoto()));
             recipeField.setText(recipe.getName());
             recipeDescription.setText(recipe.getDescription());
             recipeInstruction.setText(recipe.getInstructions());
+            recipeType.setText(type.getName());
+            recipeCat.setText(category.getName());
+            if(recipe.getIsFavourite() == true){
+                isFavourite = true;
+                favouriteButton.setImageResource(btn_star_big_on);
+            }
         } else {
             isEdit = true;
             getSupportActionBar().setTitle("New Recipe");
@@ -265,9 +265,23 @@ public class RecipeActivity extends AppCompatActivity {
 
         //************************ RECIPETYPE ***************************
         //TODO:: Query realm for recipetype name, if it exists get recipetype ID and assign to recipe
+        EditText typeText = (EditText) findViewById(R.id.typeText);
+        String type = typeText.getText().toString().trim();
+        String typeId = realmUtils.getTypeIDFromName(type);
+        if(typeId == null){
+            realmUtils.createType(type);
+            typeId = realmUtils.getTypeIDFromName(type);
+        }
 
         //************************* RECIPECATEGORY ***********************
         //TODO:: Query realm for recipecat name, if it exists get recipecat ID and assign to recipe
+        EditText categoryText = (EditText) findViewById(R.id.categoryText);
+        String category = categoryText.getText().toString().trim();
+        String catId = realmUtils.getCategoryIDFromName(category);
+        if(catId == null){
+            realmUtils.createCategory(category);
+            catId = realmUtils.getCategoryIDFromName(type);
+        }
 
         //************************* IS HEALTHY ****************************
         //TODO:: assign boolean
@@ -291,7 +305,7 @@ public class RecipeActivity extends AppCompatActivity {
         }
 
         //************************ ACCESS REALM AND UPDATE ********************
-        realmUtils.updateRecipe(recipeId,name,true,isFavourite,photo,description,instruction);
+        realmUtils.updateRecipe(recipeId,name,true,isFavourite,photo,description,instruction,typeId,catId);
         realmUtils.saveIngredient(ingredientList);
     }
 

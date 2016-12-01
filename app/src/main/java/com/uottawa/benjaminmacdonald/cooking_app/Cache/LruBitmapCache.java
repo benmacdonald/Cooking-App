@@ -1,4 +1,4 @@
-package com.uottawa.benjaminmacdonald.cooking_app.Helpers;
+package com.uottawa.benjaminmacdonald.cooking_app.Cache;
 
 import android.content.Context;
 import android.graphics.Bitmap;
