@@ -222,7 +222,7 @@ public final class RealmUtils {
 
     public RecipeCategory getCategoryFromId(String id){
         RealmResults<RecipeCategory> query = realm.where(RecipeCategory.class)
-//                .equalTo("id",id)
+                .equalTo("id",id)
                 .findAll();
         return query.get(0);
     }
