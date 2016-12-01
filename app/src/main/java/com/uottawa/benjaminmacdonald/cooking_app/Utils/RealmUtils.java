@@ -207,6 +207,11 @@ public final class RealmUtils {
         realm.commitTransaction();
     }
 
+    public RealmResults<RecipeType> queryType(){
+        RealmResults<RecipeType> queryType = realm.where(RecipeType.class)
+                .findAll();
+        return queryType;
+    }
 
     //******************************** CATEGORY CLASS **********************************************
 
@@ -234,5 +239,9 @@ public final class RealmUtils {
         realm.commitTransaction();
     }
 
-
+    public RealmResults<RecipeCategory> queryCategory(){
+        RealmResults<RecipeCategory> queryCatergory = realm.where(RecipeCategory.class)
+                .findAll();
+        return queryCatergory;
+    }
 }
