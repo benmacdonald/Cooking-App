@@ -3,6 +3,6 @@
     <translate android:fromXDelta="0" android:toXDelta="-100%p"
         android:id="@+id/slide_to_left"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator"
-        android:duration="300"/>
+        android:duration="200"/>
 </set>
     <!-- taken from https://kylewbanks.com/blog/left-and-right-slide-animations-on-android-activity-or-view -->
