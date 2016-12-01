@@ -16,12 +16,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,13 +33,10 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.Toast;
 
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.IngredientArrayAdapter;
-import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
-import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
+import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,10 +45,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-
-import static android.R.attr.data;
 import static android.R.drawable.btn_star_big_off;
 import static android.R.drawable.btn_star_big_on;
 
@@ -83,20 +79,30 @@ public class RecipeActivity extends AppCompatActivity {
         EditText recipeField = (EditText) findViewById(R.id.recipeTitle);
         EditText recipeDescription = (EditText) findViewById(R.id.textDescription);
         EditText recipeInstruction = (EditText) findViewById(R.id.textInstruction);
+        EditText recipeType = (EditText) findViewById(R.id.typeText);
+        EditText recipeCat = (EditText) findViewById(R.id.categoryText);
         if(!recipeId.equals("")){
             isEdit = false;
             recipe = realmUtils.getRecipeFromID(recipeId);
             ingredientList = realmUtils.getIngredientsFromRecipeID(recipeId);
             //Set the title of the current activity to the recipe's title, only if it exists
+            RecipeType type = realmUtils.getTypeFromId(recipe.getRecipeType());
+            RecipeCategory category = realmUtils.getCategoryFromId(recipe.getRecipeCategory());
             getSupportActionBar().setTitle(recipe.getName());
             imageView.setImageBitmap(realmUtils.convertToBitmap(recipe.getPhoto()));
             recipeField.setText(recipe.getName());
             recipeDescription.setText(recipe.getDescription());
             recipeInstruction.setText(recipe.getInstructions());
+            recipeType.setText(type.getName());
+            recipeCat.setText(category.getName());
+            if(recipe.getIsFavourite() == true){
+                isFavourite = true;
+                favouriteButton.setImageResource(btn_star_big_on);
+            }
         } else {
             isEdit = true;
             getSupportActionBar().setTitle("New Recipe");
-            recipe = new Recipe();
+            recipe = realmUtils.createRecipe("tmp-bmat");
             recipeId = recipe.getId();
             ingredientList = new ArrayList<Ingredient>();
             ingredientList.add(new Ingredient(recipeId));
@@ -117,14 +123,12 @@ public class RecipeActivity extends AppCompatActivity {
                 if (!isFavourite) {
                     isFavourite = true;
                     favouriteButton.setImageResource(btn_star_big_on);
-                    recipe.setIsFavourite(true);
                 }
                 else {
                     isFavourite = false;
                     favouriteButton.setImageResource(btn_star_big_off);
-                    recipe.setIsFavourite(false);
                 }
-                realmUtils.saveRecipe(recipe);
+                realmUtils.updateFavouriteForRecipe(recipeId,isFavourite);
             }
         });
 
@@ -168,6 +172,10 @@ public class RecipeActivity extends AppCompatActivity {
         //**** Setting up ingredient list **********************************************************
 
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
+
+        if(ingredientList.size() <= 0){
+            ingredientList.add(new Ingredient(recipeId));
+        }
 
         ingredientArrayAdapter = new IngredientArrayAdapter(this,ingredientList);
         listView.setAdapter(ingredientArrayAdapter);
@@ -213,11 +221,14 @@ public class RecipeActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        if(id == android.R.id.home){
+            //check if recipe is tmp
+            //TODO:: check if default then delete
+        }
         if (id == R.id.save_button) {
             //do save
             changeState(false);
-            updateValues(recipe);
+            updateValues();
         }
         if(id== R.id.edit_button){
             changeState(true);
@@ -288,40 +299,66 @@ public class RecipeActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    public void updateValues (Recipe recipe){
-        //Image
+    public void updateValues (){
+        //********************** IMAGE **************************
         ImageView imageView = (ImageView) findViewById(R.id.recipeImage);
-        recipe.setPhoto(realmUtils.convertToByteArray(((BitmapDrawable)imageView.getDrawable()).getBitmap()));
+        Bitmap photo = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
-        //name
+        //********************** NAME ***************************
         EditText recipeTitle = (EditText) findViewById(R.id.recipeTitle);
-        recipe.setName(recipeTitle.getText().toString());
+        String name = recipeTitle.getText().toString();
 
-        //description
-        EditText description = (EditText) findViewById(R.id.textDescription);
-        recipe.setDescription(description.getText().toString());
+        //*********************** DESCRIPTION ************************
+        EditText descriptionText = (EditText) findViewById(R.id.textDescription);
+        String description = descriptionText.getText().toString();
 
-        //instructions
-        EditText instructions = (EditText) findViewById(R.id.textInstruction);
-        recipe.setInstructions(instructions.getText().toString());
+        //*********************** INSTRUCTION **************************
+        EditText instructionText = (EditText) findViewById(R.id.textInstruction);
+        String instruction = instructionText.getText().toString();
 
-        //ingredients
+        //************************ RECIPETYPE ***************************
+        //TODO:: Query realm for recipetype name, if it exists get recipetype ID and assign to recipe
+        EditText typeText = (EditText) findViewById(R.id.typeText);
+        String type = typeText.getText().toString().trim();
+        String typeId = realmUtils.getTypeIDFromName(type);
+        if(typeId == null){
+            realmUtils.createType(type);
+            typeId = realmUtils.getTypeIDFromName(type);
+        }
+
+        //************************* RECIPECATEGORY ***********************
+        //TODO:: Query realm for recipecat name, if it exists get recipecat ID and assign to recipe
+        EditText categoryText = (EditText) findViewById(R.id.categoryText);
+        String category = categoryText.getText().toString().trim();
+        String catId = realmUtils.getCategoryIDFromName(category);
+        if(catId == null){
+            realmUtils.createCategory(category);
+            catId = realmUtils.getCategoryIDFromName(category);
+        }
+
+        //************************* IS HEALTHY ****************************
+        //TODO:: assign boolean
+
+
+        //************************ INGREDIENTS ***************************
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
 
-//        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
             View rowView = listView.getChildAt(listView.getLastVisiblePosition()-1);
             if(rowView != null){
                 EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
                 EditText ingredientAmount = (EditText) rowView.findViewById(R.id.ingredientAmount);
                 Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
-//                if(ingredientTitle.getText().toString() != ""){
+                if(ingredientTitle.getText().toString() != ""){
                     ingredientList.get(ingredientList.size()-1).setName(ingredientTitle.getText().toString());
                     ingredientList.get(ingredientList.size()-1).setAmount(Double.parseDouble(ingredientAmount.getText().toString()));
                     ingredientList.get(ingredientList.size()-1).setUnitOfMeasurement(spinner.getSelectedItem().toString());
-//                }
+                }
             }
-//        }
-        realmUtils.saveRecipe(recipe);
+        }
+
+        //************************ ACCESS REALM AND UPDATE ********************
+        realmUtils.updateRecipe(recipeId,name,true,isFavourite,photo,description,instruction,typeId,catId);
         realmUtils.saveIngredient(ingredientList);
     }
 
@@ -388,6 +425,13 @@ public class RecipeActivity extends AppCompatActivity {
         //Set the image of the recipe to the one selected by the user and resize it
         recipeImage.setImageBitmap(Bitmap.createScaledBitmap(image, (int) width, (int) height, false));
 
+    }
+    public void deleteRecipe (){
+        /**
+         * TODO:: first query database and check if other recipes use the typeID or catID
+         * TODO:: if not delete the type and cat, then delete the ingredients and finally the recipe.
+         *
+         */
     }
 
     // ************** STACKOVERFLOW METHODS FOR LAYOUT *******************

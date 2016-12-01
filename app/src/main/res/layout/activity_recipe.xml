@@ -55,9 +55,6 @@
         android:layout_marginTop="-10dp"
         android:src="@drawable/ic_photo_white_24dp" />
 
-
-
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
