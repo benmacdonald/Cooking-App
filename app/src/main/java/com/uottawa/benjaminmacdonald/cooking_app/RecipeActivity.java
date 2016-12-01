@@ -2,12 +2,19 @@ package com.uottawa.benjaminmacdonald.cooking_app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,20 +37,26 @@ import com.uottawa.benjaminmacdonald.cooking_app.Adapters.IngredientArrayAdapter
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
+import static android.R.attr.data;
 import static android.R.drawable.btn_star_big_off;
 import static android.R.drawable.btn_star_big_on;
 
 public class RecipeActivity extends AppCompatActivity {
 
+    private static final int SELECT_PICTURE = 0;
     private boolean isFavourite = false;
     private IngredientArrayAdapter ingredientArrayAdapter;
     private List<Ingredient> ingredientList;
+    private List<Recipe> favouriteList;
     boolean isEdit = false;
     private RealmUtils realmUtils;
     private Recipe recipe;
@@ -59,7 +72,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         final ImageButton favouriteButton = (ImageButton) findViewById(R.id.favouriteButton);
 
-        //Figure out it the data is from a cell or the add new recipe button
+        //Figure out if the data is from a cell or the add new recipe button
         recipeId = getIntent().getStringExtra("RECIPE_ID");
         //Initialize all the fields
         ImageView imageView = (ImageView) findViewById(R.id.recipeImage);
@@ -86,6 +99,12 @@ public class RecipeActivity extends AppCompatActivity {
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+
+
+        //**** Setting all listeners for activity **********************************************************
+
+
         //Add an onClickListener for the favourite button
         //Handles cases for adding and removing the recipe from favourites
         favouriteButton.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +124,25 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+        //Code for setting the onClick listener for the picture selector button
+        FloatingActionButton fabSetPicture = (FloatingActionButton) findViewById(R.id.fabSetPicture);
+        fabSetPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Allow the user choose between taking a picture or navigating to their gallery and selecting an image
+                //Via http://stackoverflow.com/questions/5309190/android-pick-images-from-gallery
+                //and http://stackoverflow.com/questions/2708128/single-intent-to-let-user-take-picture-or-pick-image-from-gallery-in-android
+                Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                Intent optionIntent = Intent.createChooser(galleryIntent, "Choose a picture or take one from camera");
+                optionIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {cameraIntent});
+
+                startActivityForResult(optionIntent, SELECT_PICTURE);
+            }
+        });
 
         //Allow the EditText to be focused out of
         //Via http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext/19828165#19828165
@@ -116,6 +154,10 @@ public class RecipeActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
+
 
         //**** Setting up ingredient list **********************************************************
 
@@ -277,6 +319,56 @@ public class RecipeActivity extends AppCompatActivity {
         realmUtils.saveIngredient(ingredientList);
     }
 
+    //Method to receive result from photo picker, and update the image of the activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_PICTURE) {
+            //If the request was successful, continue
+            if (resultCode == RESULT_OK) {
+                //If the image could could not be retrieved
+                if (data == null) {
+                    Toast.makeText(RecipeActivity.this, "Failed to retrieve image", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Uri imageUri = data.getData();
+                try {
+                    //Convert the uri of the image to a bitmap
+                    Bitmap newImage = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                    resizeAndSetImage(newImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    //Method that will resize the selected image to an appropriate scale and set it
+    private void resizeAndSetImage(Bitmap image) {
+        ImageView recipeImage = (ImageView) findViewById(R.id.recipeImage);
+        double maxWidth = recipeImage.getWidth();
+        double maxHeight = recipeImage.getHeight();
+        double ratio = 0;
+        double width = image.getWidth();
+        double height = image.getHeight();
+
+        //Check if the image is too large, and resize it accordingly
+        if (width > maxWidth) {
+            ratio = maxWidth / width;
+            width = width * ratio;
+            height = height * ratio;
+        }
+
+        if (height > maxHeight) {
+            ratio = maxHeight / height;
+            width = width * ratio;
+            height = height * ratio;
+        }
+
+        //Set the image of the recipe to the one selected by the user and resize it
+        recipeImage.setImageBitmap(Bitmap.createScaledBitmap(image, (int) width, (int) height, false));
+
+    }
 
     // ************** STACKOVERFLOW METHODS FOR LAYOUT *******************
 
