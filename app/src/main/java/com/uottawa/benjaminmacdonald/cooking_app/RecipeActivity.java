@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,7 @@ import com.uottawa.benjaminmacdonald.cooking_app.Adapters.IngredientArrayAdapter
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +63,8 @@ public class RecipeActivity extends AppCompatActivity {
     private RealmUtils realmUtils;
     private Recipe recipe;
     private String recipeId;
+    private Uri cameraUri;
+    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,10 +136,12 @@ public class RecipeActivity extends AppCompatActivity {
                 //Allow the user choose between taking a picture or navigating to their gallery and selecting an image
                 //Via http://stackoverflow.com/questions/5309190/android-pick-images-from-gallery
                 //and http://stackoverflow.com/questions/2708128/single-intent-to-let-user-take-picture-or-pick-image-from-gallery-in-android
-                Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 galleryIntent.setType("image/*");
 
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                photoFile = new File(RecipeActivity.this.getApplicationContext().getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "yourPicture.jpg");
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
 
                 Intent optionIntent = Intent.createChooser(galleryIntent, "Choose a picture or take one from camera");
                 optionIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {cameraIntent});
@@ -322,15 +328,29 @@ public class RecipeActivity extends AppCompatActivity {
     //Method to receive result from photo picker, and update the image of the activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        boolean isCamera = false;
         if (requestCode == SELECT_PICTURE) {
             //If the request was successful, continue
             if (resultCode == RESULT_OK) {
                 //If the image could could not be retrieved
                 if (data == null) {
-                    Toast.makeText(RecipeActivity.this, "Failed to retrieve image", Toast.LENGTH_LONG).show();
-                    return;
+                    isCamera = true;
                 }
-                Uri imageUri = data.getData();
+                else {
+                    String action = data.getAction();
+                    if (action == null) {
+                        isCamera = false;
+                    } else {
+                        isCamera = action.equals(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    }
+                }
+                Uri imageUri;
+                if (isCamera) {
+                    cameraUri = Uri.fromFile(photoFile);
+                    imageUri = cameraUri;
+                }
+                else
+                    imageUri = data.getData();
                 try {
                     //Convert the uri of the image to a bitmap
                     Bitmap newImage = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
