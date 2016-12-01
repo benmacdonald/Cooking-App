@@ -280,7 +280,7 @@ public class RecipeActivity extends AppCompatActivity {
         String catId = realmUtils.getCategoryIDFromName(category);
         if(catId == null){
             realmUtils.createCategory(category);
-            catId = realmUtils.getCategoryIDFromName(type);
+            catId = realmUtils.getCategoryIDFromName(category);
         }
 
         //************************* IS HEALTHY ****************************
