@@ -2,6 +2,7 @@ package com.uottawa.benjaminmacdonald.cooking_app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
@@ -79,7 +80,7 @@ public class RecipeActivity extends AppCompatActivity {
         } else {
             isEdit = true;
             getSupportActionBar().setTitle("New Recipe");
-            recipe = new Recipe();
+            recipe = realmUtils.createRecipe("tmp-bmat");
             recipeId = recipe.getId();
             ingredientList = new ArrayList<Ingredient>();
             ingredientList.add(new Ingredient(recipeId));
@@ -94,14 +95,12 @@ public class RecipeActivity extends AppCompatActivity {
                 if (!isFavourite) {
                     isFavourite = true;
                     favouriteButton.setImageResource(btn_star_big_on);
-                    recipe.setIsFavourite(true);
                 }
                 else {
                     isFavourite = false;
                     favouriteButton.setImageResource(btn_star_big_off);
-                    recipe.setIsFavourite(false);
                 }
-                realmUtils.saveRecipe(recipe);
+                realmUtils.updateFavouriteForRecipe(recipeId,isFavourite);
             }
         });
 
@@ -120,6 +119,10 @@ public class RecipeActivity extends AppCompatActivity {
         //**** Setting up ingredient list **********************************************************
 
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
+
+        if(ingredientList.size() <= 0){
+            ingredientList.add(new Ingredient(recipeId));
+        }
 
         ingredientArrayAdapter = new IngredientArrayAdapter(this,ingredientList);
         listView.setAdapter(ingredientArrayAdapter);
@@ -165,11 +168,14 @@ public class RecipeActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        if(id == android.R.id.home){
+            //check if recipe is tmp
+            //TODO:: check if default then delete
+        }
         if (id == R.id.save_button) {
             //do save
             changeState(false);
-            updateValues(recipe);
+            updateValues();
         }
         if(id== R.id.edit_button){
             changeState(true);
@@ -240,41 +246,61 @@ public class RecipeActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    public void updateValues (Recipe recipe){
-        //Image
+    public void updateValues (){
+        //********************** IMAGE **************************
         ImageView imageView = (ImageView) findViewById(R.id.recipeImage);
-        recipe.setPhoto(realmUtils.convertToByteArray(((BitmapDrawable)imageView.getDrawable()).getBitmap()));
+        Bitmap photo = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
-        //name
+        //********************** NAME ***************************
         EditText recipeTitle = (EditText) findViewById(R.id.recipeTitle);
-        recipe.setName(recipeTitle.getText().toString());
+        String name = recipeTitle.getText().toString();
 
-        //description
-        EditText description = (EditText) findViewById(R.id.textDescription);
-        recipe.setDescription(description.getText().toString());
+        //*********************** DESCRIPTION ************************
+        EditText descriptionText = (EditText) findViewById(R.id.textDescription);
+        String description = descriptionText.getText().toString();
 
-        //instructions
-        EditText instructions = (EditText) findViewById(R.id.textInstruction);
-        recipe.setInstructions(instructions.getText().toString());
+        //*********************** INSTRUCTION **************************
+        EditText instructionText = (EditText) findViewById(R.id.textInstruction);
+        String instruction = instructionText.getText().toString();
 
-        //ingredients
+        //************************ RECIPETYPE ***************************
+        //TODO:: Query realm for recipetype name, if it exists get recipetype ID and assign to recipe
+
+        //************************* RECIPECATEGORY ***********************
+        //TODO:: Query realm for recipecat name, if it exists get recipecat ID and assign to recipe
+
+        //************************* IS HEALTHY ****************************
+        //TODO:: assign boolean
+
+
+        //************************ INGREDIENTS ***************************
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
 
-//        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
             View rowView = listView.getChildAt(listView.getLastVisiblePosition()-1);
             if(rowView != null){
                 EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
                 EditText ingredientAmount = (EditText) rowView.findViewById(R.id.ingredientAmount);
                 Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
-//                if(ingredientTitle.getText().toString() != ""){
+                if(ingredientTitle.getText().toString() != ""){
                     ingredientList.get(ingredientList.size()-1).setName(ingredientTitle.getText().toString());
                     ingredientList.get(ingredientList.size()-1).setAmount(Double.parseDouble(ingredientAmount.getText().toString()));
                     ingredientList.get(ingredientList.size()-1).setUnitOfMeasurement(spinner.getSelectedItem().toString());
-//                }
+                }
             }
-//        }
-        realmUtils.saveRecipe(recipe);
+        }
+
+        //************************ ACCESS REALM AND UPDATE ********************
+        realmUtils.updateRecipe(recipeId,name,true,isFavourite,photo,description,instruction);
         realmUtils.saveIngredient(ingredientList);
+    }
+
+    public void deleteRecipe (){
+        /**
+         * TODO:: first query database and check if other recipes use the typeID or catID
+         * TODO:: if not delete the type and cat, then delete the ingredients and finally the recipe.
+         *
+         */
     }
 
 

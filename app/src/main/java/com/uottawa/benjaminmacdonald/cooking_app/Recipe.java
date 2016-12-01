@@ -19,7 +19,8 @@ public class Recipe extends RealmObject {
     private byte[] photo;
     private String description;
     private String instructions;
-    //photo - using realm?
+    private String recipeType;
+    private String recipeCategory;
 
 
     //******* CONSTRUCTORS ****************
@@ -35,15 +36,6 @@ public class Recipe extends RealmObject {
         this.name = "";
         isFavourite = false;
     }
-
-
-    //*********** METHODS ******************
-
-    private void createIngredient(){}
-
-
-
-
 
 
     //********* GETTERS AND SETTERS *********
@@ -85,4 +77,20 @@ public class Recipe extends RealmObject {
     public void setDescription(String description) { this.description = description; }
     public String getInstructions() { return instructions; }
     public void setInstructions(String instructions) { this.instructions = instructions; }
+
+    public String getRecipeType() {
+        return recipeType;
+    }
+
+    public void setRecipeType(String recipeType) {
+        this.recipeType = recipeType;
+    }
+
+    public String getRecipeCategory() {
+        return recipeCategory;
+    }
+
+    public void setRecipeCategory(String recipeCategory) {
+        this.recipeCategory = recipeCategory;
+    }
 }

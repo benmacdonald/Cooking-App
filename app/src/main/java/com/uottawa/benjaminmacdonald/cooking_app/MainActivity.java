@@ -3,6 +3,7 @@ package com.uottawa.benjaminmacdonald.cooking_app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,13 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
-    List<Recipe> favourites = new ArrayList<Recipe>();
-    List<Recipe> recipes = new ArrayList<Recipe>();
+    RealmResults<Recipe> favourites;
+    RealmResults<Recipe> recipes;
     private RealmUtils realmUtils;
 
     @Override
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //********************* SET UP REALM OBJECT ************************************************
+        Realm.init(this);
         realmUtils = new RealmUtils(this);
 
         //******************** WRITING TO REALM (FIRST STARTUP ONLY) *******************************
@@ -61,15 +64,12 @@ public class MainActivity extends AppCompatActivity {
 //        drawableList.add(R.drawable.hamburger);
 //        drawableList.add(R.drawable.burrito);
 //
-//        for (int i = 0; i<10; i++) {
+//        for (int i = 0; i<3; i++) {
 //            if(i < 3){
-//                Recipe recipe = new Recipe();
-//                recipe.setName(favName[i]);
-//                recipe.setPhoto(realmUtils.convertToByteArray(convertToBitMap(drawableList.get(i))));
 //                if(i<2){
-//                    recipe.setIsFavourite(true);
+//                    Recipe recipe = new Recipe();
+//                            realmUtils.createRecipe("Test "+i);
 //                }
-//                realmUtils.saveRecipe(recipe);
 //            }
 //        }
 
@@ -80,12 +80,16 @@ public class MainActivity extends AppCompatActivity {
         favourites = realmUtils.queryFavouriteRecipes();
         recipes = realmUtils.queryAllNonFavourite();
 
+        //************************ Setting up image cache ******************************************
+
+
+
         //*************************Setting up favourite view ***************************************
 
         GridView gridView = (GridView) findViewById(R.id.gridView);
 
 
-        FavouriteArrayAdapter favArrayAdapter = new FavouriteArrayAdapter(this,favourites);
+        final FavouriteArrayAdapter favArrayAdapter = new FavouriteArrayAdapter(this,favourites);
         gridView.setAdapter(favArrayAdapter);
         gridView.setNumColumns(favourites.size());
         if(favourites.size() > 0){
@@ -103,10 +107,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //*************************Setting up recipe list view ***************************************
+        //*************************Setting up recipe list view *************************************
         ListView listView = (ListView) findViewById(R.id.recipeListView);
 
-        RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
+        final RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
         listView.setAdapter(recipeArrayAdapter);
 
         //Allowing a recipe to be clicked on and navigated to
@@ -119,6 +123,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //************************ SETTING UP VALUE CHANGE LISTENERS *******************************
+
+        //adding for favourite array
+        RealmChangeListener<RealmResults<Recipe>> favChange = new RealmChangeListener<RealmResults<Recipe>>() {
+            @Override
+            public void onChange(RealmResults<Recipe> element) {
+                favArrayAdapter.notifyDataSetChanged();
+
+            }
+        };
+        favourites.addChangeListener(favChange);
+
+        //adding for recipe array
+        RealmChangeListener<RealmResults<Recipe>> recipeChange = new RealmChangeListener<RealmResults<Recipe>>() {
+            @Override
+            public void onChange(RealmResults<Recipe> element) {
+                recipeArrayAdapter.notifyDataSetChanged();
+            }
+        };
+        recipes.addChangeListener(recipeChange);
+
     }
 
     @Override
@@ -184,5 +210,6 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.transition.slide_from_left,R.transition.slide_to_right);
     }
+
 
 }
