@@ -12,6 +12,7 @@ import com.uottawa.benjaminmacdonald.cooking_app.RecipeType;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,7 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 
@@ -157,6 +159,22 @@ public final class RealmUtils {
         });
     }
 
+    public RealmResults<Recipe> getRecipeFromIngredients(Collection<String> ingredientCollection){
+        RealmResults<Ingredient> ingredients;
+        RealmQuery<Ingredient> query = realm.where(Ingredient.class);
+        ArrayList<String> ingredientName = new ArrayList<String>(ingredientCollection);
+        for(int i =0; i<ingredientName.size();i++){
+            query.equalTo("name",ingredientName.get(i),Case.INSENSITIVE);
+        }
+        ingredients = query.findAll();
+
+        RealmQuery<Recipe> recipeQuery = realm.where(Recipe.class);
+        for(int j = 0; j<ingredients.size();j++){
+            recipeQuery.or().equalTo("id",ingredients.get(j).getRecipeId());
+        }
+
+        return  recipeQuery.findAll();
+    }
 
     //******************************** INGREDIENT CLASS ********************************************
 
