@@ -13,7 +13,10 @@ import com.uottawa.benjaminmacdonald.cooking_app.RecipeType;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.realm.Case;
@@ -160,20 +163,54 @@ public final class RealmUtils {
     }
 
     public RealmResults<Recipe> getRecipeFromIngredients(Collection<String> ingredientCollection){
-        RealmResults<Ingredient> ingredients;
-        RealmQuery<Ingredient> query = realm.where(Ingredient.class);
-        ArrayList<String> ingredientName = new ArrayList<String>(ingredientCollection);
-        for(int i =0; i<ingredientName.size();i++){
-            query.equalTo("name",ingredientName.get(i),Case.INSENSITIVE);
+
+        //Sets use for query duplicate
+        ArrayList<String> checkArray = new ArrayList<String>();
+        ArrayList<String> finalRecipe = new ArrayList<String>();
+
+        RealmResults<Recipe> recipes = null;
+        RealmResults<Ingredient> ingredients = null;
+        RealmQuery<Ingredient> ingredientQuery = realm.where(Ingredient.class);
+
+        ArrayList<String> tmp = new ArrayList<String>(ingredientCollection);
+
+        for(int i = 0;i<tmp.size();i++){
+            if(i==0){
+                ingredientQuery.equalTo("name",tmp.get(i),Case.INSENSITIVE);
+            } else {
+                ingredientQuery.or().equalTo("name",tmp.get(i),Case.INSENSITIVE);
+            }
         }
-        ingredients = query.findAll();
+
+        ingredients = ingredientQuery.findAll();
+        for(Ingredient ingredient: ingredients){
+            checkArray.add(ingredient.getRecipeId());
+        }
+
+        for(String id : checkArray){
+            int occurrences = Collections.frequency(checkArray,id);
+            if(occurrences == tmp.size()){
+                finalRecipe.add(id);
+            }
+        }
 
         RealmQuery<Recipe> recipeQuery = realm.where(Recipe.class);
-        for(int j = 0; j<ingredients.size();j++){
-            recipeQuery.or().equalTo("id",ingredients.get(j).getRecipeId());
+
+        if(finalRecipe.size() <= 0){
+            recipeQuery.equalTo("id","");
+        } else {
+            int i = 0;
+            for(String id : finalRecipe){
+                if(i==0) recipeQuery.equalTo("id",id);
+                else {
+                    recipeQuery.or().equalTo("id",id);
+                }
+                i++;
+            }
         }
 
-        return  recipeQuery.findAll();
+        recipes = recipeQuery.findAll();
+        return recipes;
     }
 
     //******************************** INGREDIENT CLASS ********************************************
