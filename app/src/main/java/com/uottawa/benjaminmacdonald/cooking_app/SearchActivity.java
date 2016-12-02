@@ -4,16 +4,27 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
+import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+
+import io.realm.RealmResults;
+import mabbas007.tagsedittext.TagsEditText;
 
 /**
  * Created by BenjaminMacDonald on 2016-11-21.
@@ -21,9 +32,20 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
     List<String> typeArray;
-    List<String> cultureArray;
+    List<String> categoryArray;
     List<String> healthyArray;
-    List<String> recipes = new ArrayList<String>();
+    List<Recipe> recipes = new ArrayList<Recipe>();
+
+    RealmResults<RecipeType> recipeTypes;
+    RealmResults<RecipeCategory> recipeCategories;
+
+    RealmUtils realmUtils;
+
+    RecipeArrayAdapter recipeArrayAdapter;
+
+    //tags
+    TagsEditText tags;
+    TagsEditText.TagsEditListener tagsEditListener;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -36,21 +58,40 @@ public class SearchActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //******************* SETTING UP FLITERS *******************************
-        typeArray = new ArrayList<String>();
-        typeArray.add("Type");
-        typeArray.add("Breakfast");
-        typeArray.add("Lunch");
-        typeArray.add("Dinner");
-        typeArray.add("Desert");
-        typeArray.add("Drink");
+        realmUtils = new RealmUtils(this);
 
-        cultureArray = new ArrayList<String>();
-        cultureArray.add("Category");
-        cultureArray.add("Chinese");
-        cultureArray.add("Indian");
-        cultureArray.add("Italian");
-        cultureArray.add("American");
+        recipeTypes = realmUtils.queryType();
+        recipeCategories = realmUtils.queryCategory();
+
+        //tags
+        tagsEditListener = new TagsEditText.TagsEditListener() {
+            @Override
+            public void onTagsChanged(Collection<String> collection) {
+                List<Recipe> tmp = realmUtils.getRecipeFromIngredients(collection);
+                recipes.clear();
+                recipes.addAll(tmp);
+                recipeArrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onEditingFinished() {
+            }
+        };
+        tags = (TagsEditText) findViewById(R.id.tagsEditText);
+        tags.setTagsListener(tagsEditListener);
+
+        //******************* SETTING UP FILTERS *******************************
+        typeArray = new ArrayList<String>();
+        typeArray.add("Types");
+        for (int i = 0; i<recipeTypes.size(); i++) {
+            typeArray.add(recipeTypes.get(i).getName());
+        }
+
+        categoryArray = new ArrayList<String>();
+        categoryArray.add("Category");
+        for (int i = 0; i<recipeCategories.size(); i++) {
+            categoryArray.add(recipeCategories.get(i).getName());
+        }
 
         healthyArray = new ArrayList<String>();
         healthyArray.add("Is Healthy");
@@ -61,7 +102,7 @@ public class SearchActivity extends AppCompatActivity {
         SpinnerArrayAdapter<String> filterTypeAdapter = new SpinnerArrayAdapter(this,layout,typeArray);
         filterTypeAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
-        SpinnerArrayAdapter<String> filterCultureAdapter = new SpinnerArrayAdapter(this,layout,cultureArray);
+        SpinnerArrayAdapter<String> filterCultureAdapter = new SpinnerArrayAdapter(this,layout,categoryArray);
         filterCultureAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
         SpinnerArrayAdapter<String> filterHealthyAdapter = new SpinnerArrayAdapter(this,layout,healthyArray);
@@ -77,16 +118,10 @@ public class SearchActivity extends AppCompatActivity {
         healthy.setAdapter(filterHealthyAdapter);
 
         //*************************Setting up recipe list view ***************************************
-
-        //for testing purposes
-        for (int i = 0; i<10; i++){
-            recipes.add("Test "+i);
-        }
-
         ListView listView = (ListView) findViewById(R.id.recipeListView);
 
-//        RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
-//        listView.setAdapter(recipeArrayAdapter);
+        recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
+        listView.setAdapter(recipeArrayAdapter);
     }
 
     @Override
@@ -103,6 +138,20 @@ public class SearchActivity extends AppCompatActivity {
 
 
     /// ********* METHODS *************************
+
+//    public void onClick(View v) {
+//        final int id = v.getId();
+//        switch (id) {
+//            case R.id.andButton:
+//                tags.setText("AND");
+//                break;
+//            case R.id.orButton:
+//                tags.setText("OR");
+//                break;
+//            case R.id.notButton:
+//                tags.setText("NOT");
+//        }
+//    }
 
     public void searchBarOnClick() {
 

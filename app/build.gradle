@@ -35,5 +35,6 @@ dependencies {
     compile 'io.realm:android-adapters:1.4.0'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.github.qiugang:EditTag:v1.2.3'
+    compile 'com.github.mabbas007:TagsEditText:v1.0.2'//Added for tags
     testCompile 'junit:junit:4.12'
 }

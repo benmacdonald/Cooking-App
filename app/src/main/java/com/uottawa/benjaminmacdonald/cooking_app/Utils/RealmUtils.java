@@ -12,13 +12,18 @@ import com.uottawa.benjaminmacdonald.cooking_app.RecipeType;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 
@@ -157,6 +162,56 @@ public final class RealmUtils {
         });
     }
 
+    public RealmResults<Recipe> getRecipeFromIngredients(Collection<String> ingredientCollection){
+
+        //Sets use for query duplicate
+        ArrayList<String> checkArray = new ArrayList<String>();
+        ArrayList<String> finalRecipe = new ArrayList<String>();
+
+        RealmResults<Recipe> recipes = null;
+        RealmResults<Ingredient> ingredients = null;
+        RealmQuery<Ingredient> ingredientQuery = realm.where(Ingredient.class);
+
+        ArrayList<String> tmp = new ArrayList<String>(ingredientCollection);
+
+        for(int i = 0;i<tmp.size();i++){
+            if(i==0){
+                ingredientQuery.equalTo("name",tmp.get(i),Case.INSENSITIVE);
+            } else {
+                ingredientQuery.or().equalTo("name",tmp.get(i),Case.INSENSITIVE);
+            }
+        }
+
+        ingredients = ingredientQuery.findAll();
+        for(Ingredient ingredient: ingredients){
+            checkArray.add(ingredient.getRecipeId());
+        }
+
+        for(String id : checkArray){
+            int occurrences = Collections.frequency(checkArray,id);
+            if(occurrences == tmp.size()){
+                finalRecipe.add(id);
+            }
+        }
+
+        RealmQuery<Recipe> recipeQuery = realm.where(Recipe.class);
+
+        if(finalRecipe.size() <= 0){
+            recipeQuery.equalTo("id","");
+        } else {
+            int i = 0;
+            for(String id : finalRecipe){
+                if(i==0) recipeQuery.equalTo("id",id);
+                else {
+                    recipeQuery.or().equalTo("id",id);
+                }
+                i++;
+            }
+        }
+
+        recipes = recipeQuery.findAll();
+        return recipes;
+    }
 
     //******************************** INGREDIENT CLASS ********************************************
 
@@ -207,6 +262,11 @@ public final class RealmUtils {
         realm.commitTransaction();
     }
 
+    public RealmResults<RecipeType> queryType(){
+        RealmResults<RecipeType> queryType = realm.where(RecipeType.class)
+                .findAll();
+        return queryType;
+    }
 
     //******************************** CATEGORY CLASS **********************************************
 
@@ -234,5 +294,9 @@ public final class RealmUtils {
         realm.commitTransaction();
     }
 
-
+    public RealmResults<RecipeCategory> queryCategory(){
+        RealmResults<RecipeCategory> queryCatergory = realm.where(RecipeCategory.class)
+                .findAll();
+        return queryCatergory;
+    }
 }

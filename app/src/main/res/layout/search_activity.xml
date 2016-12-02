@@ -30,24 +30,81 @@
                     android:layout_marginRight="14dp"
                     app:cardElevation="4dp">
 
-                    <EditText
+                    <!--<EditText-->
+                        <!--android:drawableLeft="@drawable/ic_search_grey"-->
+                        <!--android:drawablePadding="10dp"-->
+                        <!--android:id="@+id/test_text"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:inputType="textNoSuggestions"-->
+                        <!--android:textColor="#000000"-->
+                        <!--android:background="#FFFFFF"-->
+                        <!--android:paddingBottom="10dp"-->
+                        <!--android:paddingTop="10dp"-->
+                        <!--android:hint="Search for recipes"-->
+                        <!--android:textColorHint="#D3D3D3"-->
+                        <!--android:selectAllOnFocus="false"-->
+                        <!--android:textAllCaps="false"-->
+                        <!--android:paddingLeft="10dp" />-->
+
+                    <mabbas007.tagsedittext.TagsEditText
                         android:drawableLeft="@drawable/ic_search_grey"
                         android:drawablePadding="10dp"
-                        android:id="@+id/test_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:inputType="textNoSuggestions"
-                        android:textColor="#000000"
-                        android:background="#FFFFFF"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
+                        android:id="@+id/tagsEditText"
                         android:hint="Search for recipes"
+                        android:background="#FFFFFF"
                         android:textColorHint="#D3D3D3"
-                        android:selectAllOnFocus="false"
-                        android:textAllCaps="false"
-                        android:paddingLeft="10dp" />
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="#000000"
+                        app:allowSpaceInTag="true"
+                        app:tagsCloseImageRight="@drawable/tag_close"
+                        app:tagsBackground="@drawable/bg_blue_small"
+                        app:tagsTextColor="#000000"
+                        app:tagsTextSize="@dimen/defaultTagsTextSize"
+                        app:tagsCloseImagePadding="@dimen/defaultTagsCloseImagePadding"/>
+
                 </android.support.v7.widget.CardView>
             </android.support.v7.widget.Toolbar>
+
+            <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--tools:paddingLeft="14dp"-->
+                <!--android:paddingRight="11dp">-->
+
+                <!--<Button-->
+                    <!--android:text="AND"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:onClick="onClick"-->
+                    <!--android:id="@+id/andButton"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/colorPrimary" />-->
+
+                <!--<Button-->
+                    <!--android:text="OR"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:onClick="onClick"-->
+                    <!--android:id="@+id/orButton"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/colorPrimary" />-->
+
+                <!--<Button-->
+                    <!--android:text="NOT"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:onClick="onClick"-->
+                    <!--android:id="@+id/notButton"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/colorPrimary" />-->
+
+            <!--</LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
