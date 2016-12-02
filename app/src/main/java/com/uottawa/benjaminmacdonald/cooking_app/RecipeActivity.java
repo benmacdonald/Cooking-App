@@ -268,7 +268,7 @@ public class RecipeActivity extends AppCompatActivity {
         EditText typeText = (EditText) findViewById(R.id.typeText);
         String type = typeText.getText().toString().trim();
         String typeId = realmUtils.getTypeIDFromName(type);
-        if(typeId == null){
+        if(typeId == null && !type.equals("")){
             realmUtils.createType(type);
             typeId = realmUtils.getTypeIDFromName(type);
         }
@@ -278,7 +278,7 @@ public class RecipeActivity extends AppCompatActivity {
         EditText categoryText = (EditText) findViewById(R.id.categoryText);
         String category = categoryText.getText().toString().trim();
         String catId = realmUtils.getCategoryIDFromName(category);
-        if(catId == null){
+        if(catId == null && !category.equals("")){
             realmUtils.createCategory(category);
             catId = realmUtils.getCategoryIDFromName(type);
         }

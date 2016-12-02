@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -136,6 +138,20 @@ public class SearchActivity extends AppCompatActivity {
 
 
     /// ********* METHODS *************************
+
+//    public void onClick(View v) {
+//        final int id = v.getId();
+//        switch (id) {
+//            case R.id.andButton:
+//                tags.setText("AND");
+//                break;
+//            case R.id.orButton:
+//                tags.setText("OR");
+//                break;
+//            case R.id.notButton:
+//                tags.setText("NOT");
+//        }
+//    }
 
     public void searchBarOnClick() {
 
