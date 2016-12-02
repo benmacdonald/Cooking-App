@@ -162,7 +162,8 @@ public final class RealmUtils {
         });
     }
 
-    public RealmResults<Recipe> getRecipeFromIngredients(Collection<String> ingredientCollection){
+    public RealmResults<Recipe> getRecipeFromIngredients(Collection<String> ingredientCollection,
+                                String type, String category, String healthy){
 
         //Sets use for query duplicate
         ArrayList<String> checkArray = new ArrayList<String>();
@@ -195,6 +196,16 @@ public final class RealmUtils {
         }
 
         RealmQuery<Recipe> recipeQuery = realm.where(Recipe.class);
+        if(type != "Type" && type != "All"){
+            ArrayList<String> typeTmp = new ArrayList<String>();
+            RealmResults<RecipeType> recipeTypes = realm.where(RecipeType.class).equalTo("name",type,Case.INSENSITIVE).findAll();
+            for(String id : finalRecipe){
+                if(id == recipeTypes.get(0).getId()){
+                    typeTmp.add(id);
+                }
+            }
+            finalRecipe = typeTmp;
+        }
 
         if(finalRecipe.size() <= 0){
             recipeQuery.equalTo("id","");
@@ -252,7 +263,10 @@ public final class RealmUtils {
         RealmResults<RecipeType> query = realm.where(RecipeType.class)
                 .equalTo("id",id)
                 .findAll();
-        return  query.get(0);
+        if(query.size() >= 1){
+            return query.get(0);
+        }
+        return null;
     }
 
     public void createType(final String name){
@@ -284,7 +298,10 @@ public final class RealmUtils {
         RealmResults<RecipeCategory> query = realm.where(RecipeCategory.class)
                 .equalTo("id",id)
                 .findAll();
-        return query.get(0);
+        if(query.size() >= 1){
+            return query.get(0);
+        }
+        return null;
     }
 
     public void createCategory(final String name){

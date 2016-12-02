@@ -93,8 +93,12 @@ public class RecipeActivity extends AppCompatActivity {
             recipeField.setText(recipe.getName());
             recipeDescription.setText(recipe.getDescription());
             recipeInstruction.setText(recipe.getInstructions());
-            recipeType.setText(type.getName());
-            recipeCat.setText(category.getName());
+            if(type != null){
+                recipeType.setText(type.getName());
+            }
+            if(category != null){
+                recipeCat.setText(category.getName());
+            }
             if(recipe.getIsFavourite() == true){
                 isFavourite = true;
                 favouriteButton.setImageResource(btn_star_big_on);
