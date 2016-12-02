@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.widget.ArrayAdapter;
 
 import com.uottawa.benjaminmacdonald.cooking_app.Ingredient;
 import com.uottawa.benjaminmacdonald.cooking_app.Recipe;
@@ -195,17 +197,24 @@ public final class RealmUtils {
             }
         }
 
-        RealmQuery<Recipe> recipeQuery = realm.where(Recipe.class);
+        recipes = getRecipeFromListId(finalRecipe);
+
         if(type != "Type" && type != "All"){
-            ArrayList<String> typeTmp = new ArrayList<String>();
+            List<String> typeTmp = new ArrayList<String>();
             RealmResults<RecipeType> recipeTypes = realm.where(RecipeType.class).equalTo("name",type,Case.INSENSITIVE).findAll();
-            for(String id : finalRecipe){
-                if(id == recipeTypes.get(0).getId()){
-                    typeTmp.add(id);
+            for(Recipe recipe : recipes ){
+                if( recipe.getRecipeType() == recipeTypes.get(0).getId()){
+                    typeTmp.add(recipe.getId());
                 }
             }
-            finalRecipe = typeTmp;
+            recipes = getRecipeFromListId(typeTmp);
         }
+
+        return recipes;
+    }
+
+    public RealmResults<Recipe> getRecipeFromListId(List<String> finalRecipe){
+        RealmQuery<Recipe> recipeQuery = realm.where(Recipe.class);
 
         if(finalRecipe.size() <= 0){
             recipeQuery.equalTo("id","");
@@ -220,8 +229,7 @@ public final class RealmUtils {
             }
         }
 
-        recipes = recipeQuery.findAll();
-        return recipes;
+        return recipeQuery.findAll();
     }
 
     //******************************** INGREDIENT CLASS ********************************************
