@@ -67,6 +67,7 @@ public class SearchActivity extends AppCompatActivity {
 
         recipeTypes = realmUtils.queryType();
         recipeCategories = realmUtils.queryCategory();
+        recipes = realmUtils.getAllRecipesAsList();
 
         typeSpinnerValue = "All";
         categorySpinnerValue = "All";
@@ -105,8 +106,8 @@ public class SearchActivity extends AppCompatActivity {
         healthyArray = new ArrayList<String>();
         healthyArray.add("Is Healthy");
         healthyArray.add("All");
-        healthyArray.add("Healthy");
-        healthyArray.add("Non-healthy");
+        healthyArray.add("Yes");
+        healthyArray.add("No");
 
         int layout = R.layout.spinner_item_white;
         SpinnerArrayAdapter<String> filterTypeAdapter = new SpinnerArrayAdapter(this,layout,typeArray);

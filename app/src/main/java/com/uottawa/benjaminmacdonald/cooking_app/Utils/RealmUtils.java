@@ -53,7 +53,7 @@ public final class RealmUtils {
         return favResult;
     }
     //Finds all the recipes in realm
-    public RealmResults<Recipe> queryAllRecipes(){
+    public RealmResults<Recipe> queryAllRecipesAsync(){
 
         RealmResults<Recipe> queryRecipes = realm.where(Recipe.class)
                 .findAllAsync();
@@ -61,12 +61,24 @@ public final class RealmUtils {
         return  queryRecipes;
     }
 
+
+
+    //Fins all the recipes and returns them as a List
+    public List<Recipe> getAllRecipesAsList(){
+        List<Recipe> recipeList = new ArrayList<Recipe>();
+        RealmResults<Recipe> queryRecipes = realm.where(Recipe.class)
+                .findAll();
+        recipeList = realm.copyFromRealm(queryRecipes);
+        return recipeList;
+    }
+
+
     //Finds all non favourites
     public RealmResults<Recipe> queryAllNonFavourite(){
 
         RealmResults<Recipe> query = realm.where(Recipe.class)
                 .equalTo("isFavourite",false)
-                .findAll();
+                .findAllAsync();
         return query;
     }
 
@@ -203,13 +215,38 @@ public final class RealmUtils {
             List<String> typeTmp = new ArrayList<String>();
             RealmResults<RecipeType> recipeTypes = realm.where(RecipeType.class).equalTo("name",type,Case.INSENSITIVE).findAll();
             for(Recipe recipe : recipes ){
-                if( recipe.getRecipeType() == recipeTypes.get(0).getId()){
-                    typeTmp.add(recipe.getId());
+                if(recipe.getRecipeType() != null) {
+                    if (recipe.getRecipeType().equals(recipeTypes.get(0).getId())) {
+                        typeTmp.add(recipe.getId());
+                    }
                 }
             }
             recipes = getRecipeFromListId(typeTmp);
         }
 
+        if(category != "Category" && category != "All"){
+            List<String> categoryTmp = new ArrayList<String>();
+            RealmResults<RecipeCategory> recipeCategory = realm.where(RecipeCategory.class).equalTo("name",category,Case.INSENSITIVE).findAll();
+            for(Recipe recipe : recipes){
+                if(recipe.getRecipeCategory() != null){
+                    if(recipe.getRecipeCategory().equals(recipeCategory.get(0).getId())){
+                        categoryTmp.add(recipe.getId());
+                    }
+                }
+            }
+            recipes = getRecipeFromListId(categoryTmp);
+        }
+        if(healthy != "Is Healthy" && healthy != "All"){
+            List<String> healthyTmp = new ArrayList<String>();
+            for(Recipe recipe: recipes){
+                if(recipe.getIsHealthy() != null){
+                    if(recipe.getIsHealthy().toString().equals(healthy)){
+                        healthyTmp.add(recipe.getId());
+                    }
+                }
+            }
+            recipes = getRecipeFromListId(healthyTmp);
+        }
         return recipes;
     }
 
