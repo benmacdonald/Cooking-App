@@ -238,8 +238,10 @@ public final class RealmUtils {
         }
         if(healthy != "Is Healthy" && healthy != "All"){
             List<String> healthyTmp = new ArrayList<String>();
+            if(healthy == "Yes"){ healthy = "true"; } else if (healthy == "No"){healthy = "false";}
             for(Recipe recipe: recipes){
                 if(recipe.getIsHealthy() != null){
+                    String test = recipe.getIsHealthy().toString();
                     if(recipe.getIsHealthy().toString().equals(healthy)){
                         healthyTmp.add(recipe.getId());
                     }
