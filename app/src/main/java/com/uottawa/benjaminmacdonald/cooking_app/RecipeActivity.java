@@ -240,6 +240,7 @@ public class RecipeActivity extends AppCompatActivity {
         if(id == android.R.id.home){
             //check if recipe is tmp
             //TODO:: check if default then delete
+            recipe = realmUtils.getRecipeFromID(recipeId);
             if(recipe.getName().equals("tmp-bmat")){
                 realmUtils.deleteRecipe(recipeId);
             }
@@ -256,7 +257,7 @@ public class RecipeActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int button) {
-                            deleteRecipe();
+                            realmUtils.deleteRecipe(recipeId);
                             finish(); //Return to the MainActivity
                         }
                     })
@@ -476,13 +477,6 @@ public class RecipeActivity extends AppCompatActivity {
         //Set the image of the recipe to the one selected by the user and resize it
         recipeImage.setImageBitmap(Bitmap.createScaledBitmap(image, (int) width, (int) height, false));
 
-    }
-    public void deleteRecipe (){
-        /**
-         * TODO:: first query database and check if other recipes use the typeID or catID
-         * TODO:: if not delete the type and cat, then delete the ingredients and finally the recipe.
-         *
-         */
     }
 
 
