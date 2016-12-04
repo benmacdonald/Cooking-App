@@ -1,20 +1,27 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -193,7 +200,7 @@ public class RecipeActivity extends AppCompatActivity {
         setListViewHeightBasedOnChildren(listView);
 
 
-        final Button addIngredientBtn = (Button) findViewById(R.id.addIngredient);
+        final ImageButton addIngredientBtn = (ImageButton) findViewById(R.id.addIngredient);
         addIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -209,8 +216,10 @@ public class RecipeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_recipe, menu);
+        MenuItem delete = menu.findItem(R.id.delete_button);
         MenuItem save = menu.findItem(R.id.save_button);
         MenuItem edit = menu.findItem(R.id.edit_button);
+        delete.setVisible(true);
         if(isEdit == false){
             save.setVisible(false);
             edit.setVisible(true);
@@ -232,12 +241,33 @@ public class RecipeActivity extends AppCompatActivity {
             //check if recipe is tmp
             //TODO:: check if default then delete
         }
+
+        if (id == R.id.delete_button) {
+            //Create a dialog button that confirms whether the user wishes to delete or not
+            //Via http://stackoverflow.com/questions/2257963/how-to-show-a-dialog-to-confirm-that-the-user-wishes-to-exit-an-android-activity
+
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_delete)
+                    .setTitle("Delete Recipe")
+                    .setMessage("Are you sure you wish to delete this recipe?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int button) {
+                            deleteRecipe();
+                            finish(); //Return to the MainActivity
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        }
+
         if (id == R.id.save_button) {
             //do save
             changeState(false);
             updateValues();
         }
-        if(id== R.id.edit_button){
+
+        if (id== R.id.edit_button){
             changeState(true);
         }
 
@@ -270,6 +300,7 @@ public class RecipeActivity extends AppCompatActivity {
         ingredientList.add(new Ingredient(recipeId));
         ingredientArrayAdapter.notifyDataSetChanged();
         setListViewHeightBasedOnChildren(listView);
+
     }
 
 
@@ -285,7 +316,7 @@ public class RecipeActivity extends AppCompatActivity {
         CheckBox healthyCheckBox = (CheckBox) findViewById(R.id.healthyCheckBox);
         healthyCheckBox.setEnabled(state);
 
-        Button addIngredientButton = (Button) findViewById(R.id.addIngredient);
+        ImageButton addIngredientButton = (ImageButton) findViewById(R.id.addIngredient);
         if(!state){
             addIngredientButton.setVisibility(View.GONE);
         } else {
@@ -451,6 +482,8 @@ public class RecipeActivity extends AppCompatActivity {
          */
     }
 
+
+
     // ************** STACKOVERFLOW METHODS FOR LAYOUT *******************
 
     /**** Method for Setting the Height of the ListView dynamically.
@@ -477,5 +510,4 @@ public class RecipeActivity extends AppCompatActivity {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
-
 }

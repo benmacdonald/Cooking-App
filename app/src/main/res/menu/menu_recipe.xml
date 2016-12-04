@@ -13,4 +13,11 @@
         android:icon="@drawable/ic_mode_edit_white_24dp"
         android:title="edit"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/delete_button"
+        android:orderInCategory="100"
+        android:title="Delete"
+        app:showAsAction="never" />
+
 </menu>

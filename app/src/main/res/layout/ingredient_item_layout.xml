@@ -6,7 +6,7 @@
 
     <EditText
         android:id="@+id/ingredientTitle"
-        android:hint="ingredient"
+        android:hint="Ingredient"
         android:padding="8dp"
         android:textSize="16sp"
         android:maxWidth="150dp"
@@ -19,7 +19,7 @@
 
     <EditText
         android:id="@+id/ingredientAmount"
-        android:hint="amount"
+        android:hint="Amount"
         android:layout_weight="0.20"
         android:gravity="center"
         android:padding="8dp"
@@ -30,7 +30,8 @@
         android:layout_height="match_parent"
         android:textAlignment="center"
         android:textColor="@drawable/edit_text_disabled"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:maxLines="1"/>
 
     <Spinner
         android:layout_width="wrap_content"

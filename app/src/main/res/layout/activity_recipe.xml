@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.uottawa.benjaminmacdonald.cooking_app.RecipeActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:id="@+id/mainLayout">
 
 
 
@@ -55,10 +56,26 @@
         android:layout_marginTop="-10dp"
         android:src="@drawable/ic_photo_white_24dp" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/favouriteButton"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_anchor="@+id/recipeTitle"
+        app:layout_anchorGravity="center|right"
+        android:src="@android:drawable/btn_star_big_off"
+        android:layout_marginRight="35dp"
+        android:foregroundGravity="top"
+        android:visibility="visible" />
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:isScrollContainer="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/nestedScroll">
 
         <LinearLayout
             android:orientation="vertical"
@@ -68,9 +85,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:clickable="true"
-            android:focusableInTouchMode="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:focusableInTouchMode="true">
 
             <TextView
                 android:text="Title"
@@ -157,15 +172,15 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/typeText"
                     android:textSize="18sp"
-                    android:hint="Dinner"
-                    android:layout_weight="0.19" />
+                    android:layout_weight="0.19"
+                    android:maxLines="1"/>
 
                 <EditText
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/categoryText"
-                    android:hint="Thai"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:maxLines="1"/>
 
                 <CheckBox
                     android:layout_width="wrap_content"
@@ -185,6 +200,23 @@
             </LinearLayout>
 
             <TextView
+                android:text="Ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ingredientsLabel"
+                android:textColor="@color/colorAccent"
+                android:layout_marginTop="12dp" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stackFromBottom="true"
+                android:transcriptMode="alwaysScroll"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:id="@+id/ingredientListView" />
+
+            <TextView
                 android:text="Instructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -198,36 +230,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:hint="1. Prepare Oven at 450 degrees fahrenheit"
                 android:textColor="@drawable/edit_text_disabled" />
-
-            <TextView
-                android:text="Ingredients"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/ingredientsLabel"
-                android:textColor="@color/colorAccent"
-                android:layout_marginTop="12dp" />
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/ingredientListView" />
 
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/favouriteButton"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_anchor="@+id/recipeTitle"
-        app:layout_anchorGravity="center|right"
-        android:src="@android:drawable/btn_star_big_off"
-        android:layout_marginRight="35dp"
-        android:foregroundGravity="top"
-        android:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>
