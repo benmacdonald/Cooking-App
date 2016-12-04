@@ -27,12 +27,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.IngredientArrayAdapter;
@@ -81,11 +83,11 @@ public class RecipeActivity extends AppCompatActivity {
         EditText recipeInstruction = (EditText) findViewById(R.id.textInstruction);
         EditText recipeType = (EditText) findViewById(R.id.typeText);
         EditText recipeCat = (EditText) findViewById(R.id.categoryText);
+        CheckBox healthyCheckBox = (CheckBox) findViewById(R.id.healthyCheckBox);
         if(!recipeId.equals("")){
             isEdit = false;
             recipe = realmUtils.getRecipeFromID(recipeId);
             ingredientList = realmUtils.getIngredientsFromRecipeID(recipeId);
-            //Set the title of the current activity to the recipe's title, only if it exists
             RecipeType type = realmUtils.getTypeFromId(recipe.getRecipeType());
             RecipeCategory category = realmUtils.getCategoryFromId(recipe.getRecipeCategory());
             getSupportActionBar().setTitle(recipe.getName());
@@ -93,6 +95,7 @@ public class RecipeActivity extends AppCompatActivity {
             recipeField.setText(recipe.getName());
             recipeDescription.setText(recipe.getDescription());
             recipeInstruction.setText(recipe.getInstructions());
+            healthyCheckBox.setChecked(recipe.getIsHealthy());
             if(type != null){
                 recipeType.setText(type.getName());
             }
@@ -270,6 +273,7 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
 
+    //Enables editing for all components in the recipe acitivty if state == true
     public void changeState(Boolean state){
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
         EditText recipeTitle = (EditText) findViewById(R.id.recipeTitle);
@@ -278,6 +282,8 @@ public class RecipeActivity extends AppCompatActivity {
         description.setEnabled(state);
         EditText instruction = (EditText) findViewById(R.id.textInstruction);
         instruction.setEnabled(state);
+        CheckBox healthyCheckBox = (CheckBox) findViewById(R.id.healthyCheckBox);
+        healthyCheckBox.setEnabled(state);
 
         Button addIngredientButton = (Button) findViewById(R.id.addIngredient);
         if(!state){
@@ -342,6 +348,9 @@ public class RecipeActivity extends AppCompatActivity {
 
         //************************* IS HEALTHY ****************************
         //TODO:: assign boolean
+        CheckBox healthyCheckBox = (CheckBox) findViewById(R.id.healthyCheckBox);
+        boolean isHealthy = healthyCheckBox.isChecked();
+
 
 
         //************************ INGREDIENTS ***************************
@@ -361,8 +370,12 @@ public class RecipeActivity extends AppCompatActivity {
             }
         }
 
+        //************************ TITLE ***************************
+        EditText titleText = (EditText) findViewById(R.id.recipeTitle);
+        getSupportActionBar().setTitle(titleText.getText());
+
         //************************ ACCESS REALM AND UPDATE ********************
-        realmUtils.updateRecipe(recipeId,name,true,isFavourite,photo,description,instruction,typeId,catId);
+        realmUtils.updateRecipe(recipeId,name,isHealthy,isFavourite,photo,description,instruction,typeId,catId);
         realmUtils.saveIngredient(ingredientList);
     }
 

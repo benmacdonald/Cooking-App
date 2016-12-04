@@ -141,8 +141,7 @@
                     android:textColor="@color/colorAccent"
                     android:text="Healthy"
                     android:layout_marginTop="12dp"
-                    android:layout_marginRight="64dp"
-                    android:layout_weight="0.08" />
+                    android:layout_weight="0.07" />
 
             </LinearLayout>
 
@@ -154,11 +153,12 @@
                 android:weightSum="1">
 
                 <EditText
-                    android:layout_width="120dp"
+                    android:layout_width="112dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/typeText"
                     android:textSize="18sp"
-                    android:hint="Dinner" />
+                    android:hint="Dinner"
+                    android:layout_weight="0.19" />
 
                 <EditText
                     android:layout_width="120dp"
@@ -171,7 +171,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/healthyCheckBox"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="0.08" />
 
             </LinearLayout>
