@@ -11,6 +11,15 @@
     <string name="type">Type</string>
     <string name="category">Category</string>
     <string name="healthy">Is Healthy</string>
+    <string name="searching_for_a_recipe_title">Searching for a Recipe:</string>
+    <string name="to_search_for_a_recipe_start_by_tapping_the_magnifying_glass_icon_in_the_upper_right_corner_of_the_screen">To search for a recipe, start by tapping the magnifying glass icon in the upper right corner of the screen.</string>
+    <string name="after_clicking_the_search_button_enter_search_criteria_in_the_search_box_here_you_may_also_select_category_filters_for_your_search_to_narrow_down_results">After clicking the search button, enter search criteria in the search box. Here you may also select category filters for your search to narrow down results.</string>
+    <string name="frequently_asked_questions">Frequently Asked Questions:</string>
+    <string name="to_add_your_own_recipe_begin_by_clicking_the_large_button_at_the_bottom_right_corner_of_the_screen">To add your own recipe, begin by clicking the large \'+\' button at the bottom right corner of the screen.</string>
+    <string name="fill_in_the_required_fields_and_add_an_optional_picture_to_complete_the_custom_recipe">Fill in the required fields and add an optional picture to complete the custom recipe.</string>
+    <string name="favoriting_a_recipe">Favoriting a Recipe:</string>
+    <string name="to_favorite_a_recipe_such_that_it_appears_on_the_home_screen_first_find_a_recipe_if_you_are_unfamiliar_with_how_to_find_a_recipe_please_see_searching_for_a_recipe">To favorite a recipe such that it appears on the home screen, first find a recipe. If you are unfamiliar with how to find a recipe, please see \'Searching For a Recipe\'.</string>
+    <string name="tap_the_star_next_to_the_title_of_the_recipe_once_the_star_changes_color_the_recipe_will_be_favorited_unfavorited_accordingly">Tap the star next to the title of the recipe. Once the star changes color, the recipe will be favorited/unfavorited accordingly.</string>
 
     <string-array name="measurementUnits">
         <item>Units</item>

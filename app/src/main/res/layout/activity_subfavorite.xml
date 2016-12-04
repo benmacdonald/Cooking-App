@@ -14,17 +14,62 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="51dp"
-        android:id="@+id/textView3"
-        android:text="Placeholder text and placeholder image"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/txtFavoriteBold"
+        android:text="@string/favoriting_a_recipe"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:gravity="center"/>
 
-    <ImageView
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/spc1" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/txtFavoriteOne"
+        android:layout_below="@+id/spc1"
+        android:text="@string/to_favorite_a_recipe_such_that_it_appears_on_the_home_screen_first_find_a_recipe_if_you_are_unfamiliar_with_how_to_find_a_recipe_please_see_searching_for_a_recipe"
+        android:layout_alignParentStart="true"
+        android:gravity="center"/>
+
+
+    <TextView
+        android:text="@string/tap_the_star_next_to_the_title_of_the_recipe_once_the_star_changes_color_the_recipe_will_be_favorited_unfavorited_accordingly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:id="@+id/txtFavoriteTwo"
+        android:layout_below="@+id/txtFavoriteOne"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"/>
+
+    <ImageView
+
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        app:srcCompat="@drawable/tap_recipe"
+        android:id="@+id/imgFavoriteOne"
+        android:scaleY="1.6"
+        android:scaleX="1.6"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/imgFavoriteHelp" />
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="45dp" />
+
+    <ImageView
+
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        app:srcCompat="@drawable/tap_favorite"
+        android:id="@+id/imgFavoriteTwo"
+        android:scaleY="1.6"
+        android:scaleX="1.6"
+        android:layout_marginStart="19dp"
+        android:layout_alignTop="@+id/imgFavoriteOne"
+        android:layout_toEndOf="@+id/imgFavoriteOne" />
+
 </RelativeLayout>

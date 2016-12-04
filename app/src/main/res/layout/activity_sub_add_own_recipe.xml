@@ -11,21 +11,70 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.uottawa.benjaminmacdonald.cooking_app.HelpSubActivities.SubactivityAddOwnRecipe">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_weight="0.06"
+        android:layout_marginTop="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/spc1"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtAddOwnOne"
+        android:layout_below="@+id/spc1"
+        android:text="@string/to_add_your_own_recipe_begin_by_clicking_the_large_button_at_the_bottom_right_corner_of_the_screen"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="@string/fill_in_the_required_fields_and_add_an_optional_picture_to_complete_the_custom_recipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:id="@+id/txtAddOwnTwo"
+        android:layout_below="@+id/txtAddOwnOne"
+        android:layout_alignParentEnd="true" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/txtAddOwnOne"
+        android:layout_alignParentStart="true"
+        android:id="@+id/spc2" />
+
+    <ImageView
+
+        android:layout_width="120dp"
+        android:layout_height="140dp"
+        app:srcCompat="@drawable/start_add_new_recipe"
+        android:id="@+id/imgSearchOne"
+        android:scaleY="1.8"
+        android:scaleX="2"
+        android:layout_marginStart="22dp"
+        android:layout_below="@+id/txtAddOwnTwo"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="27dp" />
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="140dp"
+        android:src="@drawable/recipe_add_screen"
+        android:id="@+id/imgSearchTwo"
+        android:scaleX="1.3"
+        android:scaleY="1.1"
+        android:layout_alignTop="@+id/imgSearchOne"
+        android:layout_toEndOf="@+id/imgSearchOne"
+        android:layout_marginStart="30dp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/txtAddOwnBold"
+        android:text="Adding Your Own Recipe:"
+        android:textStyle="bold"
+        android:gravity="center"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="53dp"
-        android:id="@+id/txtAddOwnRecipeHelp"
-        android:layout_alignParentStart="true"
-        android:text="Placeholder text and placeholder image" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/imgAddOwnRecipeHelp" />
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
