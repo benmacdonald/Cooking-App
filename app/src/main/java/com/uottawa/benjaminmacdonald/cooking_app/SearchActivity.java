@@ -4,16 +4,28 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
+import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+
+import io.realm.RealmResults;
+import mabbas007.tagsedittext.TagsEditText;
 
 /**
  * Created by BenjaminMacDonald on 2016-11-21.
@@ -21,9 +33,24 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
     List<String> typeArray;
-    List<String> cultureArray;
+    List<String> categoryArray;
     List<String> healthyArray;
-    List<String> recipes = new ArrayList<String>();
+    List<Recipe> recipes = new ArrayList<Recipe>();
+    String typeSpinnerValue;
+    String categorySpinnerValue;
+    String healthySpinnerValue;
+
+    RealmResults<RecipeType> recipeTypes;
+    RealmResults<RecipeCategory> recipeCategories;
+
+    RealmUtils realmUtils;
+
+    RecipeArrayAdapter recipeArrayAdapter;
+
+    //tags
+    TagsEditText tags;
+    TagsEditText.TagsEditListener tagsEditListener;
+    Collection<String> ingredientList;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -36,57 +63,118 @@ public class SearchActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //******************* SETTING UP FLITERS *******************************
+        realmUtils = new RealmUtils(this);
+
+        recipeTypes = realmUtils.queryType();
+        recipeCategories = realmUtils.queryCategory();
+        recipes = realmUtils.getAllRecipesAsList();
+
+        typeSpinnerValue = "All";
+        categorySpinnerValue = "All";
+        healthySpinnerValue = "All";
+
+        //tags
+        tagsEditListener = new TagsEditText.TagsEditListener() {
+            @Override
+            public void onTagsChanged(Collection<String> collection) {
+                ingredientList = collection;
+                updateSearchList(ingredientList);
+            }
+
+            @Override
+            public void onEditingFinished() {
+            }
+        };
+        tags = (TagsEditText) findViewById(R.id.tagsEditText);
+        tags.setTagsListener(tagsEditListener);
+
+        //******************* SETTING UP FILTERS *******************************
         typeArray = new ArrayList<String>();
         typeArray.add("Type");
-        typeArray.add("Breakfast");
-        typeArray.add("Lunch");
-        typeArray.add("Dinner");
-        typeArray.add("Desert");
-        typeArray.add("Drink");
+        typeArray.add("All");
+        for (int i = 0; i<recipeTypes.size(); i++) {
+            typeArray.add(recipeTypes.get(i).getName());
+        }
 
-        cultureArray = new ArrayList<String>();
-        cultureArray.add("Category");
-        cultureArray.add("Chinese");
-        cultureArray.add("Indian");
-        cultureArray.add("Italian");
-        cultureArray.add("American");
+        categoryArray = new ArrayList<String>();
+        categoryArray.add("Category");
+        categoryArray.add("All");
+        for (int i = 0; i<recipeCategories.size(); i++) {
+            categoryArray.add(recipeCategories.get(i).getName());
+        }
 
         healthyArray = new ArrayList<String>();
         healthyArray.add("Is Healthy");
-        healthyArray.add("Healthy");
-        healthyArray.add("Non-healthy");
+        healthyArray.add("All");
+        healthyArray.add("Yes");
+        healthyArray.add("No");
 
         int layout = R.layout.spinner_item_white;
         SpinnerArrayAdapter<String> filterTypeAdapter = new SpinnerArrayAdapter(this,layout,typeArray);
         filterTypeAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
-        SpinnerArrayAdapter<String> filterCultureAdapter = new SpinnerArrayAdapter(this,layout,cultureArray);
+        SpinnerArrayAdapter<String> filterCultureAdapter = new SpinnerArrayAdapter(this,layout,categoryArray);
         filterCultureAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
         SpinnerArrayAdapter<String> filterHealthyAdapter = new SpinnerArrayAdapter(this,layout,healthyArray);
         filterHealthyAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
 
-        Spinner type = (Spinner) findViewById(R.id.typeSpinner);
+        final Spinner type = (Spinner) findViewById(R.id.typeSpinner);
         type.setAdapter(filterTypeAdapter);
 
-        Spinner culture = (Spinner) findViewById(R.id.cultureSpinner);
+        final Spinner culture = (Spinner) findViewById(R.id.cultureSpinner);
         culture.setAdapter(filterCultureAdapter);
 
-        Spinner healthy = (Spinner) findViewById(R.id.healthySpinner);
+        final Spinner healthy = (Spinner) findViewById(R.id.healthySpinner);
         healthy.setAdapter(filterHealthyAdapter);
 
-        //*************************Setting up recipe list view ***************************************
+        //************************** SETTING UP SPINNER SELECTORS **********************************
+        type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                typeSpinnerValue = (String) type.getSelectedItem();
+                updateSearchList(ingredientList);
 
-        //for testing purposes
-        for (int i = 0; i<10; i++){
-            recipes.add("Test "+i);
-        }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        culture.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    categorySpinnerValue = (String) culture.getSelectedItem();
+                    updateSearchList(ingredientList);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        healthy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    healthySpinnerValue = (String) healthy.getSelectedItem();
+                    updateSearchList(ingredientList);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //*************************Setting up recipe list view **************************************
         ListView listView = (ListView) findViewById(R.id.recipeListView);
 
-//        RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
-//        listView.setAdapter(recipeArrayAdapter);
+        recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
+        listView.setAdapter(recipeArrayAdapter);
     }
 
     @Override
@@ -104,8 +192,27 @@ public class SearchActivity extends AppCompatActivity {
 
     /// ********* METHODS *************************
 
-    public void searchBarOnClick() {
+//    public void onClick(View v) {
+//        final int id = v.getId();
+//        switch (id) {
+//            case R.id.andButton:
+//                tags.setText("AND");
+//                break;
+//            case R.id.orButton:
+//                tags.setText("OR");
+//                break;
+//            case R.id.notButton:
+//                tags.setText("NOT");
+//        }
+//    }
 
+    public void updateSearchList(Collection<String> collection) {
+        if(collection != null){
+            List<Recipe> tmp = realmUtils.getRecipeFromIngredients(collection,typeSpinnerValue,categorySpinnerValue,healthySpinnerValue);
+            recipes.clear();
+            recipes.addAll(tmp);
+            recipeArrayAdapter.notifyDataSetChanged();
+        }
     }
 
 }

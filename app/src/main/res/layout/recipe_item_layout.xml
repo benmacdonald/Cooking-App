@@ -4,14 +4,24 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/imageView"
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:srcCompat="@mipmap/ic_launcher"-->
+        <!--android:id="@+id/imageView"-->
+        <!--android:layout_weight="0.69"-->
+        <!--android:paddingTop="8dp"-->
+        <!--android:paddingBottom="8dp" />-->
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/recipeSmallImage"
         android:layout_weight="0.69"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:src="@drawable/hamburgar_placeholder"
+        android:layout_height="68dp"
+        android:layout_width="68dp" />
 
     <LinearLayout
         android:orientation="vertical"
