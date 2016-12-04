@@ -19,7 +19,7 @@
         android:layout_weight="0.69"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:src="@drawable/hamburger_placeholder"
+        android:src="@drawable/hamburgar_placeholder"
         android:layout_height="68dp"
         android:layout_width="68dp" />
 
