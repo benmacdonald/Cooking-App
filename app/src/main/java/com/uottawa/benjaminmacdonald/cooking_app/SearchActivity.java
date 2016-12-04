@@ -1,5 +1,6 @@
 package com.uottawa.benjaminmacdonald.cooking_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -133,6 +134,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 typeSpinnerValue = (String) type.getSelectedItem();
+                if(ingredientList == null){
+                    ingredientList = new ArrayList<String>();
+                }
                 updateSearchList(ingredientList);
 
             }
@@ -147,6 +151,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     categorySpinnerValue = (String) culture.getSelectedItem();
+                    if(ingredientList == null){
+                        ingredientList = new ArrayList<String>();
+                    }
                     updateSearchList(ingredientList);
             }
 
@@ -160,6 +167,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     healthySpinnerValue = (String) healthy.getSelectedItem();
+                    if(ingredientList == null){
+                        ingredientList = new ArrayList<String>();
+                    }
                     updateSearchList(ingredientList);
 
             }
@@ -175,6 +185,16 @@ public class SearchActivity extends AppCompatActivity {
 
         recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
         listView.setAdapter(recipeArrayAdapter);
+
+        //Allowing a recipe to be clicked on and navigated to
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getBaseContext(), RecipeActivity.class);
+                intent.putExtra("RECIPE_ID", recipes.get(position).getId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -62,12 +62,13 @@
                         android:maxLines="2"
                         android:textColor="#000000"
                         app:allowSpaceInTag="true"
-                        app:tagsCloseImageRight="@drawable/tag_close"
+                        app:tagsCloseImageRight="@drawable/ic_close_red_16px"
                         app:tagsBackground="@drawable/tag_background"
                         app:tagsTextColor="#000000"
                         app:tagsTextSize="@dimen/defaultTagsTextSize"
                         app:tagsCloseImagePadding="@dimen/defaultTagsCloseImagePadding"
-                        android:textAlignment="viewStart" />
+                        android:textAlignment="viewStart"
+                        android:layout_weight="1" />
 
                 </android.support.v7.widget.CardView>
             </android.support.v7.widget.Toolbar>
