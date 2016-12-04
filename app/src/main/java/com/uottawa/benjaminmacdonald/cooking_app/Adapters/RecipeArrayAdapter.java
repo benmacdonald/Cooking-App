@@ -49,7 +49,7 @@ public class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
             cv.execute(values.get(position).getId());
         } else {
             Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.hamburger_placeholder);
+                    R.drawable.hamburgar_placeholder);
             imageView.setImageBitmap(icon);
         }
 

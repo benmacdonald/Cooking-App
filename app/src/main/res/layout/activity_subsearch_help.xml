@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_subsearch_help"
     android:layout_width="match_parent"
@@ -13,9 +14,72 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="51dp"
-        android:id="@+id/txtSearchHelp"
-        android:text="Placeholder text and placeholder image"
+        android:id="@+id/txtSearchHelpBold"
+        android:text="@string/searching_for_a_recipe_title"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_weight="0.06"
+        android:layout_marginTop="22dp"
         android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/spc1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtSearchOne"
+        android:layout_below="@+id/spc1"
+        android:text="@string/to_search_for_a_recipe_start_by_tapping_the_magnifying_glass_icon_in_the_upper_right_corner_of_the_screen"
+        android:layout_alignParentStart="true"
+        android:gravity="center"/>
+
+    <TextView
+        android:text="@string/after_clicking_the_search_button_enter_search_criteria_in_the_search_box_here_you_may_also_select_category_filters_for_your_search_to_narrow_down_results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:id="@+id/txtSearchTwo"
+        android:layout_below="@+id/txtSearchOne"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"/>
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:src="@drawable/search_nofilter"
+        android:id="@+id/imgSearchTwo"
+        android:scaleX="2"
+        android:scaleY="1.8"
+        android:layout_alignTop="@+id/imgSearchOne"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:id="@+id/imgSearchThree"
+        android:src="@drawable/search_filter"
+        android:scaleX="2"
+        android:scaleY="1.8"
+        android:layout_alignTop="@+id/imgSearchTwo"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="11dp" />
+
+    <ImageView
+
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/start_search"
+        android:id="@+id/imgSearchOne"
+        android:scaleY="1.4"
+        android:scaleX="1.5"
+        android:layout_marginTop="86dp"
+        android:layout_below="@+id/txtSearchTwo"
         android:layout_alignParentStart="true" />
+
+
 </RelativeLayout>
