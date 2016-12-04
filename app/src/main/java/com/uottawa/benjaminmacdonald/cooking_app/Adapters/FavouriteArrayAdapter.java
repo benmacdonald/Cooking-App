@@ -15,6 +15,7 @@ import com.uottawa.benjaminmacdonald.cooking_app.R;
 import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 import com.uottawa.benjaminmacdonald.cooking_app.Recipe;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -51,7 +52,6 @@ public class FavouriteArrayAdapter extends ArrayAdapter<Recipe>  { //CHANGE TO R
 
     protected class ConvertToBitmapTask extends AsyncTask<String, Void, Bitmap> {
         private ImageView imageView;
-        private Recipe recipe;
         private byte[] bytes;
 
         public  ConvertToBitmapTask(byte[] bytes, ImageView imageView){
@@ -62,13 +62,17 @@ public class FavouriteArrayAdapter extends ArrayAdapter<Recipe>  { //CHANGE TO R
         protected Bitmap doInBackground(String... params) {
             RealmUtils futureRealmUtils = new RealmUtils(context);
             Bitmap bitmap = bitmapCache.get(params[0]);
-            if(bitmap != null){
-                return bitmapCache.get(params[0]);
-            } else {
+            if(bitmap == null){
+                while(bytes == null){
+                    futureRealmUtils.getRealm().waitForChange();
+                    bytes = futureRealmUtils.getRecipeFromID(params[0]).getPhoto();
+                }
                 bitmap = futureRealmUtils.convertToBitmap(bytes);
                 bitmapCache.put(params[0],bitmap);
-                return bitmap;
             }
+//            futureRealmUtils.getRealm().close();
+            return bitmap;
+
         }
 
         @Override
