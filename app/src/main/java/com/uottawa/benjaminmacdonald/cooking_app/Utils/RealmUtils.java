@@ -37,7 +37,7 @@ public final class RealmUtils {
 
     private Realm realm;
 
-    public RealmUtils(Context context){
+    public RealmUtils(Context context) {
         realm = Realm.getDefaultInstance();
     }
 
@@ -45,26 +45,26 @@ public final class RealmUtils {
 
 
     //Finds all the recipes that are favoured in realm
-    public RealmResults<Recipe> queryFavouriteRecipes(){
+    public RealmResults<Recipe> queryFavouriteRecipes() {
 
-        RealmResults<Recipe>  favResult = realm.where(Recipe.class)
-                .equalTo("isFavourite",true)
+        RealmResults<Recipe> favResult = realm.where(Recipe.class)
+                .equalTo("isFavourite", true)
                 .findAll();
         return favResult;
     }
+
     //Finds all the recipes in realm
-    public RealmResults<Recipe> queryAllRecipesAsync(){
+    public RealmResults<Recipe> queryAllRecipesAsync() {
 
         RealmResults<Recipe> queryRecipes = realm.where(Recipe.class)
                 .findAllAsync();
 
-        return  queryRecipes;
+        return queryRecipes;
     }
 
 
-
     //Fins all the recipes and returns them as a List
-    public List<Recipe> getAllRecipesAsList(){
+    public List<Recipe> getAllRecipesAsList() {
         List<Recipe> recipeList = new ArrayList<Recipe>();
         RealmResults<Recipe> queryRecipes = realm.where(Recipe.class)
                 .findAll();
@@ -74,22 +74,22 @@ public final class RealmUtils {
 
 
     //Finds all non favourites
-    public RealmResults<Recipe> queryAllNonFavourite(){
+    public RealmResults<Recipe> queryAllNonFavourite() {
 
         RealmResults<Recipe> query = realm.where(Recipe.class)
-                .equalTo("isFavourite",false)
+                .equalTo("isFavourite", false)
                 .findAllAsync();
         return query;
     }
 
 
     //converts byte array to bitmap
-    public Bitmap convertToBitmap(byte[] byteArray){
+    public Bitmap convertToBitmap(byte[] byteArray) {
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
 
     //converts bitmap to byte array
-    public byte[] convertToByteArray(Bitmap bitmap){
+    public byte[] convertToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
@@ -98,16 +98,16 @@ public final class RealmUtils {
     }
 
     @Deprecated
-    public void saveRecipe (Recipe recipe) {
+    public void saveRecipe(Recipe recipe) {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(recipe);
         realm.commitTransaction();
     }
 
     //creates recipe
-    public Recipe createRecipe(final String name){
+    public Recipe createRecipe(final String name) {
         final Recipe[] recipe = {new Recipe()};
-        realm.executeTransactionAsync(new Realm.Transaction(){
+        realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
                 recipe[0].setName(name);
@@ -121,12 +121,12 @@ public final class RealmUtils {
     //saves recipe
     public void updateRecipe(final String id, final String name, final Boolean isHealthy, final Boolean isFavourite,
                              final Bitmap photo, final String description, final String instruction,
-                                final String typeId, final String catId){
+                             final String typeId, final String catId) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
-            public void execute(Realm bgRealm){
+            public void execute(Realm bgRealm) {
                 Recipe recipe = getRecipeFromIdAsync(bgRealm, id);
-                if(recipe != null){
+                if (recipe != null) {
                     recipe.setName(name);
                     recipe.setIsHealthy(isHealthy);
                     recipe.setIsFavourite(isFavourite);
@@ -141,34 +141,34 @@ public final class RealmUtils {
     }
 
     @Nullable
-    public Recipe getRecipeFromID (String recipeID){
-        RealmResults<Recipe>  recipeResult = realm.where(Recipe.class)
+    public Recipe getRecipeFromID(String recipeID) {
+        RealmResults<Recipe> recipeResult = realm.where(Recipe.class)
                 .equalTo("id", recipeID)
                 .findAll();
-        if(recipeResult.size() > 0){
+        if (recipeResult.size() > 0) {
             return recipeResult.get(0);
         }
         return null;
     }
 
     @Nullable
-    public Recipe getRecipeFromIdAsync(Realm bgRealm,String recipeID){
-        RealmResults<Recipe>  recipeResult = bgRealm.where(Recipe.class)
+    public Recipe getRecipeFromIdAsync(Realm bgRealm, String recipeID) {
+        RealmResults<Recipe> recipeResult = bgRealm.where(Recipe.class)
                 .equalTo("id", recipeID)
                 .findAll();
-        if(recipeResult.size() > 0){
+        if (recipeResult.size() > 0) {
             return recipeResult.get(0);
         }
         return null;
     }
 
-    public void updateFavouriteForRecipe(final String recipeId, final Boolean value){
+    public void updateFavouriteForRecipe(final String recipeId, final Boolean value) {
         realm.executeTransactionAsync(new Realm.Transaction() {
 
             @Override
-            public void execute(Realm bgRealm){
-                Recipe recipe = getRecipeFromIdAsync(bgRealm,recipeId);
-                if(recipe != null){
+            public void execute(Realm bgRealm) {
+                Recipe recipe = getRecipeFromIdAsync(bgRealm, recipeId);
+                if (recipe != null) {
                     recipe.setIsFavourite(value);
                 }
             }
@@ -177,7 +177,7 @@ public final class RealmUtils {
     }
 
     public RealmResults<Recipe> getRecipeFromIngredients(Collection<String> ingredientCollection,
-                                String type, String category, String healthy){
+                                                         String type, String category, String healthy) {
 
         //Sets use for query duplicate
         ArrayList<String> checkArray = new ArrayList<String>();
@@ -189,33 +189,33 @@ public final class RealmUtils {
 
         ArrayList<String> tmp = new ArrayList<String>(ingredientCollection);
 
-        for(int i = 0;i<tmp.size();i++){
-            if(i==0){
-                ingredientQuery.equalTo("name",tmp.get(i),Case.INSENSITIVE);
+        for (int i = 0; i < tmp.size(); i++) {
+            if (i == 0) {
+                ingredientQuery.equalTo("name", tmp.get(i), Case.INSENSITIVE);
             } else {
-                ingredientQuery.or().equalTo("name",tmp.get(i),Case.INSENSITIVE);
+                ingredientQuery.or().equalTo("name", tmp.get(i), Case.INSENSITIVE);
             }
         }
 
         ingredients = ingredientQuery.findAll();
-        for(Ingredient ingredient: ingredients){
+        for (Ingredient ingredient : ingredients) {
             checkArray.add(ingredient.getRecipeId());
         }
 
-        for(String id : checkArray){
-            int occurrences = Collections.frequency(checkArray,id);
-            if(occurrences == tmp.size()){
+        for (String id : checkArray) {
+            int occurrences = Collections.frequency(checkArray, id);
+            if (occurrences == tmp.size()) {
                 finalRecipe.add(id);
             }
         }
 
         recipes = getRecipeFromListId(finalRecipe);
 
-        if(type != "Type" && type != "All"){
+        if (type != "Type" && type != "All") {
             List<String> typeTmp = new ArrayList<String>();
-            RealmResults<RecipeType> recipeTypes = realm.where(RecipeType.class).equalTo("name",type,Case.INSENSITIVE).findAll();
-            for(Recipe recipe : recipes ){
-                if(recipe.getRecipeType() != null) {
+            RealmResults<RecipeType> recipeTypes = realm.where(RecipeType.class).equalTo("name", type, Case.INSENSITIVE).findAll();
+            for (Recipe recipe : recipes) {
+                if (recipe.getRecipeType() != null) {
                     if (recipe.getRecipeType().equals(recipeTypes.get(0).getId())) {
                         typeTmp.add(recipe.getId());
                     }
@@ -224,23 +224,23 @@ public final class RealmUtils {
             recipes = getRecipeFromListId(typeTmp);
         }
 
-        if(category != "Category" && category != "All"){
+        if (category != "Category" && category != "All") {
             List<String> categoryTmp = new ArrayList<String>();
-            RealmResults<RecipeCategory> recipeCategory = realm.where(RecipeCategory.class).equalTo("name",category,Case.INSENSITIVE).findAll();
-            for(Recipe recipe : recipes){
-                if(recipe.getRecipeCategory() != null){
-                    if(recipe.getRecipeCategory().equals(recipeCategory.get(0).getId())){
+            RealmResults<RecipeCategory> recipeCategory = realm.where(RecipeCategory.class).equalTo("name", category, Case.INSENSITIVE).findAll();
+            for (Recipe recipe : recipes) {
+                if (recipe.getRecipeCategory() != null) {
+                    if (recipe.getRecipeCategory().equals(recipeCategory.get(0).getId())) {
                         categoryTmp.add(recipe.getId());
                     }
                 }
             }
             recipes = getRecipeFromListId(categoryTmp);
         }
-        if(healthy != "Is Healthy" && healthy != "All"){
+        if (healthy != "Is Healthy" && healthy != "All") {
             List<String> healthyTmp = new ArrayList<String>();
-            for(Recipe recipe: recipes){
-                if(recipe.getIsHealthy() != null){
-                    if(recipe.getIsHealthy().toString().equals(healthy)){
+            for (Recipe recipe : recipes) {
+                if (recipe.getIsHealthy() != null) {
+                    if (recipe.getIsHealthy().toString().equals(healthy)) {
                         healthyTmp.add(recipe.getId());
                     }
                 }
@@ -250,17 +250,17 @@ public final class RealmUtils {
         return recipes;
     }
 
-    public RealmResults<Recipe> getRecipeFromListId(List<String> finalRecipe){
+    public RealmResults<Recipe> getRecipeFromListId(List<String> finalRecipe) {
         RealmQuery<Recipe> recipeQuery = realm.where(Recipe.class);
 
-        if(finalRecipe.size() <= 0){
-            recipeQuery.equalTo("id","");
+        if (finalRecipe.size() <= 0) {
+            recipeQuery.equalTo("id", "");
         } else {
             int i = 0;
-            for(String id : finalRecipe){
-                if(i==0) recipeQuery.equalTo("id",id);
+            for (String id : finalRecipe) {
+                if (i == 0) recipeQuery.equalTo("id", id);
                 else {
-                    recipeQuery.or().equalTo("id",id);
+                    recipeQuery.or().equalTo("id", id);
                 }
                 i++;
             }
@@ -269,26 +269,17 @@ public final class RealmUtils {
         return recipeQuery.findAll();
     }
 
-    public void deleteRecipe(final String recipeId){
-
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Recipe recipe = getRecipeFromID(recipeId);
-                //delete the type if its the only recipe that uses it
-                if(realm.where(Recipe.class).equalTo("recipeType",recipe.getRecipeType()).findAll().size() <= 1){
-                    realm.where(RecipeType.class).equalTo("id",recipe.getRecipeType()).findAll().deleteAllFromRealm();
-                }
-                //delete the category if its the only recipe that uses it
-                if(realm.where(Recipe.class).equalTo("recipeCategory",recipe.getRecipeCategory()).findAll().size() <=1){
-                    realm.where(RecipeCategory.class).equalTo("id",recipe.getRecipeCategory()).findAll().deleteAllFromRealm();
-                }
-                //delete all the ingredients
-                realm.where(Ingredient.class).equalTo("recipeId",recipeId).findAll().deleteAllFromRealm();
-                recipe.deleteFromRealm();
+    public void deleteRecipeByID(String recipeId) throws NullPointerException //Don't use int, string less restrictive.
+        {
+            realm.beginTransaction();
+            //Get recipe variable and perform checks on it.
+            Recipe recipeQuery = getRecipeFromID(recipeId);
+            if(realm.where(Recipe.class).equalTo("id",recipeQuery.getRecipeType()).findAll().size() == 1)
+            {
+                realm.deleteAll(realm.where(RecipeType.class).equalTo("id", recipeQuery.getRecipeType().findAll()));
             }
-        });
 
+        }
     }
 
     //******************************** INGREDIENT CLASS ********************************************
