@@ -189,27 +189,31 @@ public final class RealmUtils {
 
         ArrayList<String> tmp = new ArrayList<String>(ingredientCollection);
 
-        for(int i = 0;i<tmp.size();i++){
-            if(i==0){
-                ingredientQuery.equalTo("name",tmp.get(i),Case.INSENSITIVE);
-            } else {
-                ingredientQuery.or().equalTo("name",tmp.get(i),Case.INSENSITIVE);
+        if(tmp.size() <= 0){
+            recipes = realm.where(Recipe.class).findAll();
+        } else {
+
+            for (int i = 0; i < tmp.size(); i++) {
+                if (i == 0) {
+                    ingredientQuery.equalTo("name", tmp.get(i), Case.INSENSITIVE);
+                } else {
+                    ingredientQuery.or().equalTo("name", tmp.get(i), Case.INSENSITIVE);
+                }
             }
-        }
 
-        ingredients = ingredientQuery.findAll();
-        for(Ingredient ingredient: ingredients){
-            checkArray.add(ingredient.getRecipeId());
-        }
-
-        for(String id : checkArray){
-            int occurrences = Collections.frequency(checkArray,id);
-            if(occurrences == tmp.size()){
-                finalRecipe.add(id);
+            ingredients = ingredientQuery.findAll();
+            for (Ingredient ingredient : ingredients) {
+                checkArray.add(ingredient.getRecipeId());
             }
-        }
 
-        recipes = getRecipeFromListId(finalRecipe);
+            for (String id : checkArray) {
+                int occurrences = Collections.frequency(checkArray, id);
+                if (occurrences == tmp.size()) {
+                    finalRecipe.add(id);
+                }
+            }
+            recipes = getRecipeFromListId(finalRecipe);
+        }
 
         if(type != "Type" && type != "All"){
             List<String> typeTmp = new ArrayList<String>();
