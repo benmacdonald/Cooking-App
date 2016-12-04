@@ -67,14 +67,10 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-
         //********************* Query favourite recipes and all recipes ****************************
 
         favourites = realmUtils.queryFavouriteRecipes();
         recipes = realmUtils.queryAllNonFavourite();
-
-        //************************ Setting up image cache ******************************************
-
 
 
         //*************************Setting up favourite view ***************************************
@@ -82,10 +78,10 @@ public class MainActivity extends AppCompatActivity {
         GridView gridView = (GridView) findViewById(R.id.gridView);
 
 
-        final FavouriteArrayAdapter favArrayAdapter = new FavouriteArrayAdapter(this,favourites);
+        final FavouriteArrayAdapter favArrayAdapter = new FavouriteArrayAdapter(this, favourites);
         gridView.setAdapter(favArrayAdapter);
         gridView.setNumColumns(favourites.size());
-        if(favourites.size() > 0){
+        if (favourites.size() > 0) {
             setDynamicWidth(gridView);
         }
         gridView.setDrawSelectorOnTop(true);
@@ -103,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         //*************************Setting up recipe list view *************************************
         ListView listView = (ListView) findViewById(R.id.recipeListView);
 
-        final RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
+        final RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this, recipes);
         listView.setAdapter(recipeArrayAdapter);
 
         //Allowing a recipe to be clicked on and navigated to
@@ -116,6 +112,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //************************ SETTING UP VALUE CHANGE LISTENERS *******************************
+
+        //adding for favourite array
+        RealmChangeListener<RealmResults<Recipe>> favChange = new RealmChangeListener<RealmResults<Recipe>>() {
+            @Override
+            public void onChange(RealmResults<Recipe> element) {
+                favArrayAdapter.notifyDataSetChanged();
+
+            }
+        };
+        favourites.addChangeListener(favChange);
+
+        //adding for recipe array
+        RealmChangeListener<RealmResults<Recipe>> recipeChange = new RealmChangeListener<RealmResults<Recipe>>() {
+            @Override
+            public void onChange(RealmResults<Recipe> element) {
+                recipeArrayAdapter.notifyDataSetChanged();
+            }
+        };
+        recipes.addChangeListener(recipeChange);
 
 
     }
@@ -135,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             navToHelpAct();
         }
-        if(id== R.id.search_button){
+        if (id == R.id.search_button) {
             navToSearchAct();
         }
 
@@ -144,17 +161,18 @@ public class MainActivity extends AppCompatActivity {
 
     //***************************** OUR METHODS **************************************
 
-    public Bitmap convertToBitMap(int drawable){
+    public Bitmap convertToBitMap(int drawable) {
         return BitmapFactory.decodeResource(getResources(),
                 drawable);
     }
 
-    public void navToSearchAct(){
-        startActivity(new Intent(this,SearchActivity.class));
-        overridePendingTransition(R.transition.slide_from_right,R.transition.slide_to_left);
+    public void navToSearchAct() {
+        startActivity(new Intent(this, SearchActivity.class));
+        overridePendingTransition(R.transition.slide_from_right, R.transition.slide_to_left);
     }
+
     public void navToHelpAct() {
-        startActivity(new Intent(this,HelpActivity.class));
+        startActivity(new Intent(this, HelpActivity.class));
     }
 
 
@@ -172,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         View listItem = gridViewAdapter.getView(0, null, gridView);
         listItem.measure(0, 0);
         totalWidth = listItem.getMeasuredWidth();
-        totalWidth = totalWidth*items;
+        totalWidth = totalWidth * items;
         ViewGroup.LayoutParams params = gridView.getLayoutParams();
         params.width = totalWidth;
         gridView.setLayoutParams(params);
@@ -181,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.transition.slide_from_left,R.transition.slide_to_right);
+        overridePendingTransition(R.transition.slide_from_left, R.transition.slide_to_right);
     }
 
 
