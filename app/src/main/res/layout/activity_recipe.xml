@@ -35,7 +35,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:id="@+id/recipeImage"
-            android:src="@drawable/plate_wood_table"
+            android:src="@drawable/hamburger_placeholder"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:layout_collapseMode="parallax"
