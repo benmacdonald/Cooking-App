@@ -63,12 +63,15 @@ public class FavouriteArrayAdapter extends ArrayAdapter<Recipe>  { //CHANGE TO R
             RealmUtils futureRealmUtils = new RealmUtils(context);
             Bitmap bitmap = bitmapCache.get(params[0]);
             if(bitmap != null){
+                futureRealmUtils.getRealm().close();
                 return bitmapCache.get(params[0]);
             } else {
                 bitmap = futureRealmUtils.convertToBitmap(bytes);
                 bitmapCache.put(params[0],bitmap);
+                futureRealmUtils.getRealm().close();
                 return bitmap;
             }
+
         }
 
         @Override

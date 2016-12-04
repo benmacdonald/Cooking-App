@@ -361,4 +361,10 @@ public final class RealmUtils {
                 .findAll();
         return queryCatergory;
     }
+
+    // *************** SETTERSAND GETTERS **********************************************************
+
+    public Realm getRealm(){
+        return realm;
+    }
 }

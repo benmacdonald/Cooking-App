@@ -72,9 +72,11 @@ public class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
             RealmUtils futureRealmUtils = new RealmUtils(context);
             Bitmap bitmap = bitmapCache.get(params[0]);
             if(bitmapCache.get(params[0]) != null){
+                futureRealmUtils.getRealm().close();
                 return bitmapCache.get(params[0]);
             } else {
                 bitmapCache.put(params[0],futureRealmUtils.convertToBitmap(bytes));
+                futureRealmUtils.getRealm().close();
                 return futureRealmUtils.convertToBitmap(bytes);
             }
 
