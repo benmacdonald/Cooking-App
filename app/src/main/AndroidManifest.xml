@@ -27,7 +27,7 @@
         <activity android:name=".RecipeActivity"
             android:label=" "
             android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.uottawa.benjaminmacdonald.cooking_app.MainActivity"/>
