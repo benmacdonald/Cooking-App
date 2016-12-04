@@ -117,26 +117,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //************************ SETTING UP VALUE CHANGE LISTENERS *******************************
-
-        //adding for favourite array
-        RealmChangeListener<RealmResults<Recipe>> favChange = new RealmChangeListener<RealmResults<Recipe>>() {
-            @Override
-            public void onChange(RealmResults<Recipe> element) {
-                favArrayAdapter.notifyDataSetChanged();
-
-            }
-        };
-        favourites.addChangeListener(favChange);
-
-        //adding for recipe array
-        RealmChangeListener<RealmResults<Recipe>> recipeChange = new RealmChangeListener<RealmResults<Recipe>>() {
-            @Override
-            public void onChange(RealmResults<Recipe> element) {
-                recipeArrayAdapter.notifyDataSetChanged();
-            }
-        };
-        recipes.addChangeListener(recipeChange);
 
     }
 

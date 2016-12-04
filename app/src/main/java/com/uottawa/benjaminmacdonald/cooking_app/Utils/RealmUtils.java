@@ -269,6 +269,28 @@ public final class RealmUtils {
         return recipeQuery.findAll();
     }
 
+    public void deleteRecipe(final String recipeId){
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Recipe recipe = getRecipeFromID(recipeId);
+                //delete the type if its the only recipe that uses it
+                if(realm.where(Recipe.class).equalTo("recipeType",recipe.getRecipeType()).findAll().size() <= 1){
+                    realm.where(RecipeType.class).equalTo("id",recipe.getRecipeType()).findAll().deleteAllFromRealm();
+                }
+                //delete the category if its the only recipe that uses it
+                if(realm.where(Recipe.class).equalTo("recipeCategory",recipe.getRecipeCategory()).findAll().size() <=1){
+                    realm.where(RecipeCategory.class).equalTo("id",recipe.getRecipeCategory()).findAll().deleteAllFromRealm();
+                }
+                //delete all the ingredients
+                realm.where(Ingredient.class).equalTo("recipeId",recipeId).findAll().deleteAllFromRealm();
+                recipe.deleteFromRealm();
+            }
+        });
+
+    }
+
     //******************************** INGREDIENT CLASS ********************************************
 
     //save ingredient to DB

@@ -231,6 +231,9 @@ public class RecipeActivity extends AppCompatActivity {
         if(id == android.R.id.home){
             //check if recipe is tmp
             //TODO:: check if default then delete
+            if(recipe.getName().equals("tmp-bmat")){
+                realmUtils.deleteRecipe(recipeId);
+            }
         }
         if (id == R.id.save_button) {
             //do save
