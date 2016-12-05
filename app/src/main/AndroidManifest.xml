@@ -28,9 +28,9 @@
             android:label=" "
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.uottawa.benjaminmacdonald.cooking_app.MainActivity"/>
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.uottawa.benjaminmacdonald.cooking_app.MainActivity"/>-->
             <intent-filter>
                 <action android:name="com.google.zxing.client.android.SCAN" />
                 <category android:name="android.intent.category.DEFAULT" />
