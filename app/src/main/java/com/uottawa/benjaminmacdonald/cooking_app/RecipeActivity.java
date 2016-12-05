@@ -71,6 +71,8 @@ public class RecipeActivity extends AppCompatActivity {
         EditText recipeType = (EditText) findViewById(R.id.typeText);
         EditText recipeCat = (EditText) findViewById(R.id.categoryText);
         CheckBox healthyCheckBox = (CheckBox) findViewById(R.id.healthyCheckBox);
+
+        //If the user is viewing an already existing recipe, populate it with its details
         if(!recipeId.equals("")){
             isEdit = false;
             recipe = realmUtils.getRecipeFromID(recipeId);

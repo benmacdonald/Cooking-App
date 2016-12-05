@@ -56,14 +56,13 @@
         android:id="@+id/deleteIngredient"
         android:gravity="fill_vertical"
         android:layout_weight="0.03"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:layout_alignParentRight="true"
         android:layout_marginTop="14dp"
         android:maxWidth="24dp"
         android:maxHeight="24dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-
         android:background="?attr/selectableItemBackgroundBorderless" />
 
 
