@@ -126,7 +126,7 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         healthyArray = new ArrayList<String>();
-        healthyArray.add("Is Healthy");
+        healthyArray.add("Healthy");
         healthyArray.add("All");
         healthyArray.add("Yes");
         healthyArray.add("No");
