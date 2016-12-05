@@ -1,45 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/ingredientTitle"
-        android:hint="Ingredient"
-        android:padding="8dp"
-        android:textSize="16sp"
-        android:maxWidth="150dp"
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/ingredientTitle"
+            android:hint="Ingredient"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:maxWidth="150dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="fill_vertical"
+            android:textColor="@drawable/edit_text_disabled"
+            android:background="@android:color/transparent"
+            android:inputType="text"
+            android:nextFocusDown="@+id/ingredientAmount"
+            android:maxLines="1"
+            android:imeOptions="actionDone"/>
+
+        <EditText
+            android:id="@+id/ingredientAmount"
+            android:hint="Amount"
+            android:layout_weight="0.20"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:maxWidth="100dp"
+            android:inputType="number|numberDecimal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:textColor="@drawable/edit_text_disabled"
+            android:background="@android:color/transparent"
+            android:maxLines="1"
+            android:imeOptions="actionDone"/>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/measurementSpinner"
+            android:layout_marginRight="36dp"
+            android:textColor="@drawable/edit_text_disabled"
+            android:layout_weight="0.20" />
+
+    </LinearLayout>
+
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_clear_red_24dp"
+        android:id="@+id/deleteIngredient"
         android:gravity="fill_vertical"
-        android:textColor="@drawable/edit_text_disabled"
-        android:background="@android:color/transparent"
-        android:maxLines="1" />
-
-    <EditText
-        android:id="@+id/ingredientAmount"
-        android:hint="Amount"
-        android:layout_weight="0.20"
-        android:gravity="center"
-        android:padding="8dp"
-        android:textSize="16sp"
-        android:maxWidth="100dp"
-        android:inputType="number|numberDecimal"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textAlignment="center"
-        android:textColor="@drawable/edit_text_disabled"
-        android:background="@android:color/transparent"
-        android:maxLines="1"/>
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/measurementSpinner"
-        android:layout_marginRight="6dp"
-        android:textColor="@drawable/edit_text_disabled"
-        android:layout_weight="0.20" />
+        android:layout_weight="0.03"
+        android:visibility="invisible"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="14dp"
+        android:maxWidth="24dp"
+        android:maxHeight="24dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:background="?attr/selectableItemBackgroundBorderless" />
 
 
-</LinearLayout>
+</RelativeLayout>

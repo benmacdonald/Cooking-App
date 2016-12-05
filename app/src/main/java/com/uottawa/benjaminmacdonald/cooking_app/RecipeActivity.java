@@ -6,25 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,11 +19,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -45,22 +31,18 @@ import android.widget.Toast;
 
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.IngredientArrayAdapter;
+import com.uottawa.benjaminmacdonald.cooking_app.Cache.LruBitmapCache;
 import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.drawable.btn_star_big_off;
-import static android.R.drawable.btn_star_big_on;
 
 public class RecipeActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 0;
-    private boolean isFavourite = false;
+    private boolean isFavourite;
     private IngredientArrayAdapter ingredientArrayAdapter;
     private List<Ingredient> ingredientList;
     private List<Recipe> favouriteList;
@@ -79,8 +61,6 @@ public class RecipeActivity extends AppCompatActivity {
         //realm implementation
         realmUtils = new RealmUtils(this);
 
-        final ImageButton favouriteButton = (ImageButton) findViewById(R.id.favouriteButton);
-
         //Figure out if the data is from a cell or the add new recipe button
         recipeId = getIntent().getStringExtra("RECIPE_ID");
         //Initialize all the fields
@@ -91,6 +71,8 @@ public class RecipeActivity extends AppCompatActivity {
         EditText recipeType = (EditText) findViewById(R.id.typeText);
         EditText recipeCat = (EditText) findViewById(R.id.categoryText);
         CheckBox healthyCheckBox = (CheckBox) findViewById(R.id.healthyCheckBox);
+
+        //If the user is viewing an already existing recipe, populate it with its details
         if(!recipeId.equals("")){
             isEdit = false;
             recipe = realmUtils.getRecipeFromID(recipeId);
@@ -103,15 +85,12 @@ public class RecipeActivity extends AppCompatActivity {
             recipeDescription.setText(recipe.getDescription());
             recipeInstruction.setText(recipe.getInstructions());
             healthyCheckBox.setChecked(recipe.getIsHealthy());
+            isFavourite = recipe.getIsFavourite();
             if(type != null){
                 recipeType.setText(type.getName());
             }
             if(category != null){
                 recipeCat.setText(category.getName());
-            }
-            if(recipe.getIsFavourite() == true){
-                isFavourite = true;
-                favouriteButton.setImageResource(btn_star_big_on);
             }
         } else {
             isEdit = true;
@@ -120,7 +99,10 @@ public class RecipeActivity extends AppCompatActivity {
             recipeId = recipe.getId();
             ingredientList = new ArrayList<Ingredient>();
             ingredientList.add(new Ingredient(recipeId));
+            isFavourite = false;
         }
+
+        //Add a back button to the action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -128,23 +110,6 @@ public class RecipeActivity extends AppCompatActivity {
 
         //**** Setting all listeners for activity **********************************************************
 
-
-        //Add an onClickListener for the favourite button
-        //Handles cases for adding and removing the recipe from favourites
-        favouriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isFavourite) {
-                    isFavourite = true;
-                    favouriteButton.setImageResource(btn_star_big_on);
-                }
-                else {
-                    isFavourite = false;
-                    favouriteButton.setImageResource(btn_star_big_off);
-                }
-                realmUtils.updateFavouriteForRecipe(recipeId,isFavourite);
-            }
-        });
 
         //Code for setting the onClick listener for the picture selector button
         FloatingActionButton fabSetPicture = (FloatingActionButton) findViewById(R.id.fabSetPicture);
@@ -170,15 +135,20 @@ public class RecipeActivity extends AppCompatActivity {
 
         //Allow the EditText to be focused out of
         //Via http://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext/19828165#19828165
-        recipeField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
                     hideKeyboard(view);
                 }
             }
-        });
+        };
 
+        //Add this listener to all EditText fields
+        recipeField.setOnFocusChangeListener(focusChangeListener);
+        recipeDescription.setOnFocusChangeListener(focusChangeListener);
+        recipeType.setOnFocusChangeListener(focusChangeListener);
+        recipeCat.setOnFocusChangeListener(focusChangeListener);
 
 
 
@@ -200,13 +170,14 @@ public class RecipeActivity extends AppCompatActivity {
         setListViewHeightBasedOnChildren(listView);
 
 
-        final ImageButton addIngredientBtn = (ImageButton) findViewById(R.id.addIngredient);
+        LinearLayout addIngredientBtn = (LinearLayout) findViewById(R.id.ingredientLayout);
         addIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 addIngredientRow();
             }
         });
+
 
         changeState(isEdit);
 
@@ -219,6 +190,7 @@ public class RecipeActivity extends AppCompatActivity {
         MenuItem delete = menu.findItem(R.id.delete_button);
         MenuItem save = menu.findItem(R.id.save_button);
         MenuItem edit = menu.findItem(R.id.edit_button);
+        MenuItem favourite = menu.findItem(R.id.favourite_button);
         delete.setVisible(true);
         if(isEdit == false){
             save.setVisible(false);
@@ -227,6 +199,14 @@ public class RecipeActivity extends AppCompatActivity {
             save.setVisible(true);
             edit.setVisible(false);
         }
+
+        //Set the icon if this recipe is a favourite
+        if(isFavourite){
+            favourite.setIcon(R.drawable.ic_favorite_white_24dp);
+        } else {
+            favourite.setIcon(R.drawable.ic_favorite_border_white_24dp);
+        }
+
         return true;
     }
 
@@ -271,8 +251,20 @@ public class RecipeActivity extends AppCompatActivity {
             updateValues();
         }
 
-        if (id== R.id.edit_button){
+        if (id == R.id.edit_button){
             changeState(true);
+        }
+
+        if (id == R.id.favourite_button){
+            if (!isFavourite) {
+                isFavourite = true;
+                item.setIcon(R.drawable.ic_favorite_white_24dp);
+            }
+            else {
+                isFavourite = false;
+                item.setIcon(R.drawable.ic_favorite_border_white_24dp);
+            }
+            realmUtils.updateFavouriteForRecipe(recipeId, isFavourite);
         }
 
         return super.onOptionsItemSelected(item);
@@ -286,9 +278,10 @@ public class RecipeActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    //Method to add a new ingredient, creates a new row in the ingredient ListView
     public void addIngredientRow(){
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
-        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+        for(int i=0; i < listView.getCount() - 1; i++){
             View rowView = listView.getChildAt(i);
             if(rowView != null){
                 EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
@@ -308,6 +301,7 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
 
+
     //Enables editing for all components in the recipe acitivty if state == true
     public void changeState(Boolean state){
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
@@ -317,17 +311,26 @@ public class RecipeActivity extends AppCompatActivity {
         description.setEnabled(state);
         EditText instruction = (EditText) findViewById(R.id.textInstruction);
         instruction.setEnabled(state);
+        EditText type = (EditText) findViewById(R.id.typeText);
+        type.setEnabled(state);
+        EditText category = (EditText) findViewById(R.id.categoryText);
+        category.setEnabled(state);
+
+
         CheckBox healthyCheckBox = (CheckBox) findViewById(R.id.healthyCheckBox);
         healthyCheckBox.setEnabled(state);
 
-        ImageButton addIngredientButton = (ImageButton) findViewById(R.id.addIngredient);
+        LinearLayout addIngredientButton = (LinearLayout) findViewById(R.id.ingredientLayout);
+        FloatingActionButton pictureFab = (FloatingActionButton) findViewById(R.id.fabSetPicture);
         if(!state){
             addIngredientButton.setVisibility(View.GONE);
+            pictureFab.setVisibility(View.GONE);
         } else {
             addIngredientButton.setVisibility(View.VISIBLE);
+            pictureFab.setVisibility(View.VISIBLE);
         }
 
-        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+        for(int i=0; i<listView.getCount() - 1; i++){
             View rowView = listView.getChildAt(i);
             if(rowView != null){
                 EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
@@ -337,6 +340,13 @@ public class RecipeActivity extends AppCompatActivity {
 
                 Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
                 spinner.setEnabled(state);
+
+                ImageButton deleteIngredientButton = (ImageButton) rowView.findViewById(R.id.deleteIngredient);
+
+                if (!state)
+                    deleteIngredientButton.setVisibility(View.GONE);
+                else
+                    deleteIngredientButton.setVisibility(View.VISIBLE);
             }
         }
         isEdit = state;
@@ -412,6 +422,14 @@ public class RecipeActivity extends AppCompatActivity {
         //************************ ACCESS REALM AND UPDATE ********************
         realmUtils.updateRecipe(recipeId,name,isHealthy,isFavourite,photo,description,instruction,typeId,catId);
         realmUtils.saveIngredient(ingredientList);
+        //********************** CHECK IF CACHE HAS OLD IMAGE ******************************************
+        LruBitmapCache bitmapCache = LruBitmapCache.getInstance();
+        Bitmap bitmap = bitmapCache.get(recipeId);
+        if(bitmap != null){
+            if(!bitmap.equals(photo)){
+                bitmapCache.putBitmap(recipeId,photo);
+            }
+        }
     }
 
     //Method to receive result from photo picker, and update the image of the activity
@@ -457,7 +475,7 @@ public class RecipeActivity extends AppCompatActivity {
         ImageView recipeImage = (ImageView) findViewById(R.id.recipeImage);
         double maxWidth = recipeImage.getWidth();
         double maxHeight = recipeImage.getHeight();
-        double ratio = 0;
+        double ratio;
         double width = image.getWidth();
         double height = image.getHeight();
 
