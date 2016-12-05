@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
+import com.uottawa.benjaminmacdonald.cooking_app.R;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.realm.RealmResults;
+import io.realm.annotations.PrimaryKey;
 import mabbas007.tagsedittext.TagsEditText;
 
 /**
@@ -37,6 +39,9 @@ public class SearchActivity extends AppCompatActivity {
     List<String> categoryArray;
     List<String> healthyArray;
     List<Recipe> recipes = new ArrayList<Recipe>();
+    List<String> mIngre = new ArrayList<>();
+    List<String> oIngre = new ArrayList<>();
+    List<String> nIngre = new ArrayList<>();
     String typeSpinnerValue;
     String categorySpinnerValue;
     String healthySpinnerValue;
@@ -78,8 +83,24 @@ public class SearchActivity extends AppCompatActivity {
         tagsEditListener = new TagsEditText.TagsEditListener() {
             @Override
             public void onTagsChanged(Collection<String> collection) {
+                mIngre = new ArrayList<>();
+                oIngre = new ArrayList<>();
+                nIngre = new ArrayList<>();
                 ingredientList = collection;
-                updateSearchList(ingredientList);
+                List<String> tmp = new ArrayList<>(ingredientList);
+                if(tmp.size() >= 1 && tmp.get(0) != "AND" && tmp.get(0) != "OR" && tmp.get(0) != "NOT"){
+                    mIngre.add(tmp.get(0));
+                }
+                for(int i =0; i<tmp.size()-1; i ++){
+                    if(tmp.get(i) == "AND"){
+                        mIngre.add(tmp.get(i+1));
+                    } else if(tmp.get(i) == "OR"){
+                        oIngre.add(tmp.get(i+1));
+                    } else if (tmp.get(i) == "NOT"){
+                        nIngre.add(tmp.get(i+1));
+                    }
+                }
+                updateSearchList(mIngre,oIngre,nIngre);
             }
 
             @Override
@@ -105,7 +126,7 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         healthyArray = new ArrayList<String>();
-        healthyArray.add("Is Healthy");
+        healthyArray.add("Healthy");
         healthyArray.add("All");
         healthyArray.add("Yes");
         healthyArray.add("No");
@@ -137,7 +158,7 @@ public class SearchActivity extends AppCompatActivity {
                 if(ingredientList == null){
                     ingredientList = new ArrayList<String>();
                 }
-                updateSearchList(ingredientList);
+                updateSearchList(mIngre,oIngre,nIngre);
 
             }
 
@@ -154,7 +175,7 @@ public class SearchActivity extends AppCompatActivity {
                     if(ingredientList == null){
                         ingredientList = new ArrayList<String>();
                     }
-                    updateSearchList(ingredientList);
+                updateSearchList(mIngre,oIngre,nIngre);
             }
 
             @Override
@@ -170,7 +191,7 @@ public class SearchActivity extends AppCompatActivity {
                     if(ingredientList == null){
                         ingredientList = new ArrayList<String>();
                     }
-                    updateSearchList(ingredientList);
+                    updateSearchList(mIngre,oIngre,nIngre);
 
             }
 
@@ -210,25 +231,27 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 
-    /// ********* METHODS *************************
+    // ********* METHODS *************************
 
-//    public void onClick(View v) {
-//        final int id = v.getId();
-//        switch (id) {
-//            case R.id.andButton:
-//                tags.setText("AND");
-//                break;
-//            case R.id.orButton:
-//                tags.setText("OR");
-//                break;
-//            case R.id.notButton:
-//                tags.setText("NOT");
-//        }
-//    }
+    public void onClick(View v) {
+        final int id = v.getId();
+        switch (id) {
+            case R.id.andButton:
+                tags.setText("AND");
+                break;
+            case R.id.orButton:
+                tags.setText("OR");
+                break;
+            case R.id.notButton:
+                tags.setText("NOT");
+        }
+    }
 
-    public void updateSearchList(Collection<String> collection) {
-        if(collection != null){
-            List<Recipe> tmp = realmUtils.getRecipeFromIngredients(collection,typeSpinnerValue,categorySpinnerValue,healthySpinnerValue);
+    public void updateSearchList(List<String> mIngre, List<String> oIngre,
+                                 List<String> nIngre) {
+        if(mIngre != null && oIngre != null && nIngre != null){
+//            List<Recipe> tmp = realmUtils.getRecipeFromIngredients(collection,typeSpinnerValue,categorySpinnerValue,healthySpinnerValue);
+            List<Recipe> tmp = realmUtils.getRecipeFromIngredientsBoolean(mIngre,oIngre,nIngre,typeSpinnerValue,categorySpinnerValue,healthySpinnerValue);
             recipes.clear();
             recipes.addAll(tmp);
             recipeArrayAdapter.notifyDataSetChanged();

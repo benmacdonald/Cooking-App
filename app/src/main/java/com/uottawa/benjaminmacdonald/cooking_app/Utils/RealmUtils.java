@@ -52,11 +52,18 @@ public final class RealmUtils {
                 .findAll();
         return favResult;
     }
-    //Finds all the recipes in realm
+    //Finds all the recipes in realm async
     public RealmResults<Recipe> queryAllRecipesAsync(){
 
         RealmResults<Recipe> queryRecipes = realm.where(Recipe.class)
                 .findAllAsync();
+
+        return  queryRecipes;
+    }
+
+    public RealmResults<Recipe> queryAllRecipes(){
+        RealmResults<Recipe> queryRecipes = realm.where(Recipe.class)
+                .findAll();
 
         return  queryRecipes;
     }
@@ -240,7 +247,7 @@ public final class RealmUtils {
             }
             recipes = getRecipeFromListId(categoryTmp);
         }
-        if(healthy != "Is Healthy" && healthy != "All"){
+        if(healthy != "Healthy" && healthy != "All"){
             List<String> healthyTmp = new ArrayList<String>();
             if(healthy == "Yes"){ healthy = "true"; } else if (healthy == "No"){healthy = "false";}
             for(Recipe recipe: recipes){
@@ -254,6 +261,161 @@ public final class RealmUtils {
             recipes = getRecipeFromListId(healthyTmp);
         }
         return recipes;
+    }
+
+    public RealmResults<Recipe> getRecipeFromIngredientsBoolean(List<String> mIngre, List<String> oIngre,
+                                                                List<String> nIngre, String type, String cat, String healthy) {
+        //Sets use for query duplicate
+        ArrayList<String> checkArray = new ArrayList<String>();
+        ArrayList<String> necessaryRecipe = new ArrayList<String>();
+        ArrayList<String> notRecipe = new ArrayList<>();
+        ArrayList<String> finalRecipe = new ArrayList<>();
+
+        RealmResults<Recipe> recipes = null;
+        RealmResults<Ingredient> ingredients = null;
+        RealmResults<Ingredient> optionalIngredients = null;
+        RealmResults<Ingredient> notIngredients = null;
+        RealmQuery<Ingredient> ingredientQuery = realm.where(Ingredient.class);
+        RealmQuery<Ingredient> optionalQuery = realm.where(Ingredient.class);
+        RealmQuery<Ingredient> notQuery = realm.where(Ingredient.class);
+
+
+        if (mIngre.size() > 0) {
+
+            for (int i = 0; i < mIngre.size(); i++) {
+                if (i == 0) {
+                    ingredientQuery.equalTo("name", mIngre.get(i), Case.INSENSITIVE);
+                } else {
+                    ingredientQuery.or().equalTo("name", mIngre.get(i), Case.INSENSITIVE);
+                }
+            }
+
+            ingredients = ingredientQuery.findAll();
+            for (Ingredient ingredient : ingredients) {
+                checkArray.add(ingredient.getRecipeId());
+            }
+
+            for (String id : checkArray) {
+                int occurrences = Collections.frequency(checkArray, id);
+                if (occurrences == mIngre.size()) {
+                    necessaryRecipe.add(id);
+                }
+            }
+        }
+//            recipes = getRecipeFromListId(finalRecipe); dont think i need it
+
+        if (oIngre.size() <= 0) {
+            finalRecipe = necessaryRecipe;
+        } else {
+
+            for (int i = 0; i < oIngre.size(); i++) {
+                if (i == 0) {
+                    optionalQuery.equalTo("name", oIngre.get(i), Case.INSENSITIVE);
+                } else {
+                    optionalQuery.or().equalTo("name", oIngre.get(i), Case.INSENSITIVE);
+                }
+
+                optionalIngredients = optionalQuery.findAll();
+            }
+            if (mIngre.size() <= 0) {
+                for (Ingredient ingredient : optionalIngredients) {
+                    finalRecipe.add(ingredient.getRecipeId());
+                }
+            } else {
+                for (Ingredient ingredient : optionalIngredients) {
+                    if (necessaryRecipe.contains(ingredient.getRecipeId())) {
+                        finalRecipe.add(ingredient.getRecipeId());
+                    }
+                }
+            }
+        }
+
+            if (nIngre.size() >= 0) {
+                if (oIngre.size() <= 0 && mIngre.size() <= 0) {
+                    for( int i =0; i< nIngre.size(); i++){
+                        if (i == 0) {
+                            notQuery.equalTo("name", nIngre.get(i), Case.INSENSITIVE);
+                        } else {
+                            notQuery.or().equalTo("name", nIngre.get(i), Case.INSENSITIVE);
+                        }
+                        notIngredients = notQuery.findAll();
+                    }
+                    if(notIngredients != null){
+                        List<Recipe> tmp = getAllRecipesAsList();
+                        for(Recipe recipe : tmp){
+                            finalRecipe.add(recipe.getId());
+                        }
+                        for(Ingredient ingredient : notIngredients){
+                            if(finalRecipe.contains(ingredient.getRecipeId())){
+                                finalRecipe.remove(ingredient.getRecipeId());
+                            }
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < nIngre.size(); i++) {
+                        if (i == 0) {
+                            notQuery.equalTo("name", nIngre.get(i), Case.INSENSITIVE);
+                        } else {
+                            notQuery.or().equalTo("name", nIngre.get(i), Case.INSENSITIVE);
+                        }
+
+                        notIngredients = notQuery.findAll();
+                    }
+                    if (notIngredients != null) {
+                        for (Ingredient ingredient : notIngredients) {
+                            if (finalRecipe.contains(ingredient.getRecipeId())) {
+                                finalRecipe.remove(ingredient.getRecipeId());
+                            }
+                        }
+                    }
+                }
+            }
+
+        if(nIngre.size() <=0 && oIngre.size() <= 0 && mIngre.size() <= 0){
+            recipes = queryAllRecipes();
+        } else {
+            recipes = getRecipeFromListId(finalRecipe);
+        }
+
+        if(type != "Type" && type != "All"){
+            List<String> typeTmp = new ArrayList<String>();
+            RealmResults<RecipeType> recipeTypes = realm.where(RecipeType.class).equalTo("name",type,Case.INSENSITIVE).findAll();
+            for(Recipe recipe : recipes ){
+                if(recipe.getRecipeType() != null) {
+                    if (recipe.getRecipeType().equals(recipeTypes.get(0).getId())) {
+                        typeTmp.add(recipe.getId());
+                    }
+                }
+            }
+            recipes = getRecipeFromListId(typeTmp);
+        }
+
+        if(cat != "Category" && cat != "All"){
+            List<String> categoryTmp = new ArrayList<String>();
+            RealmResults<RecipeCategory> recipeCategory = realm.where(RecipeCategory.class).equalTo("name",cat,Case.INSENSITIVE).findAll();
+            for(Recipe recipe : recipes){
+                if(recipe.getRecipeCategory() != null){
+                    if(recipe.getRecipeCategory().equals(recipeCategory.get(0).getId())){
+                        categoryTmp.add(recipe.getId());
+                    }
+                }
+            }
+            recipes = getRecipeFromListId(categoryTmp);
+        }
+        if(healthy != "Healthy" && healthy != "All"){
+            List<String> healthyTmp = new ArrayList<String>();
+            if(healthy == "Yes"){ healthy = "true"; } else if (healthy == "No"){healthy = "false";}
+            for(Recipe recipe: recipes){
+                if(recipe.getIsHealthy() != null){
+                    String test = recipe.getIsHealthy().toString();
+                    if(recipe.getIsHealthy().toString().equals(healthy)){
+                        healthyTmp.add(recipe.getId());
+                    }
+                }
+            }
+            recipes = getRecipeFromListId(healthyTmp);
+        }
+        return  recipes;
     }
 
     public RealmResults<Recipe> getRecipeFromListId(List<String> finalRecipe){
