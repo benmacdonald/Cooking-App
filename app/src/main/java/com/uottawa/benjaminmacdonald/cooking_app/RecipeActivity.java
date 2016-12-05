@@ -177,21 +177,6 @@ public class RecipeActivity extends AppCompatActivity {
         });
 
 
-
-        //Set up onClickListeners for each delete button in the ListView
-       /* for (int i = 0; i < listView.getCount() - 1; i++) {
-            View rowView = listView.getChildAt(i);
-            if(rowView != null){
-                ImageButton deleteIngredientBtn = (ImageButton) rowView.findViewById(R.id.deleteIngredient);
-                deleteIngredientBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-            }
-        }*/
-
         changeState(isEdit);
 
     }
@@ -311,17 +296,6 @@ public class RecipeActivity extends AppCompatActivity {
         ingredientArrayAdapter.notifyDataSetChanged();
         setListViewHeightBasedOnChildren(listView);
 
-    }
-
-    //Method used to delete the ingredient row where the button is located
-    public void deleteIngredientRowTEST(View button) {
-        ListView listView = (ListView) findViewById(R.id.ingredientListView);
-        int index = listView.getPositionForView((View) button.getParent());
-        Toast.makeText(RecipeActivity.this, index,
-                Toast.LENGTH_LONG).show();
-        Ingredient ingredient = ingredientList.remove(index);
-        ingredientArrayAdapter.notifyDataSetChanged();
-        realmUtils.deleteIngredient(ingredient.getId());
     }
 
 

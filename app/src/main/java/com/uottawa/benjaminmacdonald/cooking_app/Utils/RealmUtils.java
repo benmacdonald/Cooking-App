@@ -298,7 +298,7 @@ public final class RealmUtils {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Ingredient ingredient = getIngredientFromIngredientID(ingredientId);
+//                Ingredient ingredient = getIngredientFromIngredientID(ingredientId);
                 //delete the ingredient
                 realm.where(Ingredient.class).equalTo("id", ingredientId).findAll().deleteAllFromRealm();
             }
