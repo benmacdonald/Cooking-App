@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.uottawa.benjaminmacdonald.cooking_app.Ingredient;
 import com.uottawa.benjaminmacdonald.cooking_app.R;
+import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,18 +26,20 @@ public class IngredientArrayAdapter extends ArrayAdapter<Ingredient> {
     private final Context context;
     private final List<Ingredient> values;
     private final List<String> measurementUnit;
+    private final RealmUtils realmUtils;
 
     public IngredientArrayAdapter(Context context, List<Ingredient> values) {
         super(context, R.layout.ingredient_item_layout,values);
         this.values = values;
         this.context = context;
         measurementUnit = Arrays.asList(context.getResources().getStringArray(R.array.measurementUnits));
+        realmUtils = new RealmUtils(context);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View listView = inflater.inflate(R.layout.ingredient_item_layout,parent,false);
+        final View listView = inflater.inflate(R.layout.ingredient_item_layout,parent,false);
 
         EditText amountView = (EditText) listView.findViewById(R.id.ingredientAmount);
         amountView.setText(String.valueOf(values.get(position).getAmount()));
@@ -55,7 +59,21 @@ public class IngredientArrayAdapter extends ArrayAdapter<Ingredient> {
         EditText nameView = (EditText) listView.findViewById(R.id.ingredientTitle);
         nameView.setText(values.get(position).getName());
 
+        ImageButton deleteIngredientBtn = (ImageButton) listView.findViewById(R.id.deleteIngredient);
+        deleteIngredientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                realmUtils.deleteIngredient(values.get(position).getId());
+                delete(position);
+            }
+        });
+
 
         return listView;
+    }
+
+    public void delete(int position){
+        values.remove(position);
+        notifyDataSetChanged();
     }
 }

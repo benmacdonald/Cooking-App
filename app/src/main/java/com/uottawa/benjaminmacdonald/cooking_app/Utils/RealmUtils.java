@@ -297,6 +297,19 @@ public final class RealmUtils {
 
     }
 
+    public void deleteIngredient(final String ingredientId){
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+//                Ingredient ingredient = getIngredientFromIngredientID(ingredientId);
+                //delete the ingredient
+                realm.where(Ingredient.class).equalTo("id", ingredientId).findAll().deleteAllFromRealm();
+            }
+        });
+
+    }
+
     //******************************** INGREDIENT CLASS ********************************************
 
     //save ingredient to DB
@@ -315,6 +328,17 @@ public final class RealmUtils {
                 .equalTo("recipeId",recipeID)
                 .findAll();
         return realm.copyFromRealm(ingredientResults);
+    }
+
+    public Ingredient getIngredientFromIngredientID(String ingredientId) {
+        RealmResults<Ingredient> ingredientResult = realm.where(Ingredient.class)
+                .equalTo("id", ingredientId)
+                .findAll();
+
+        if(ingredientResult.size() > 0){
+            return ingredientResult.get(0);
+        }
+        return null;
     }
 
 

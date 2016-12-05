@@ -56,18 +56,6 @@
         android:layout_marginTop="-10dp"
         android:src="@drawable/ic_photo_white_24dp" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/favouriteButton"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_anchor="@+id/recipeTitle"
-        app:layout_anchorGravity="center|right"
-        android:src="@android:drawable/btn_star_big_off"
-        android:layout_marginRight="35dp"
-        android:foregroundGravity="top"
-        android:visibility="visible" />
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -96,13 +84,13 @@
                 android:layout_marginTop="12dp" />
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
                 android:ems="10"
                 android:id="@+id/recipeTitle"
                 android:hint="Enter a recipe name"
-                android:lines="1"
+                android:inputType="text"
+                android:maxLines="1"
                 android:textSize="26sp"
                 android:textColor="@drawable/edit_text_disabled"/>
 
@@ -172,15 +160,21 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/typeText"
                     android:textSize="18sp"
+                    android:textColor="@drawable/edit_text_disabled"
                     android:layout_weight="0.19"
-                    android:maxLines="1"/>
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:nextFocusDown="@+id/categoryText" />
 
                 <EditText
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/categoryText"
                     android:textSize="18sp"
-                    android:maxLines="1"/>
+                    android:textColor="@drawable/edit_text_disabled"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:imeOptions="actionDone"/>
 
                 <CheckBox
                     android:layout_width="wrap_content"
@@ -210,10 +204,11 @@
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:stackFromBottom="true"
+                android:stackFromBottom="false"
                 android:transcriptMode="alwaysScroll"
                 android:divider="@null"
                 android:dividerHeight="0dp"
+                android:layout_marginBottom="12dp"
                 android:id="@+id/ingredientListView" />
 
             <TextView
