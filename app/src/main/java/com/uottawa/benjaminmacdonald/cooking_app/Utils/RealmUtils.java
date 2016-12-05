@@ -247,7 +247,7 @@ public final class RealmUtils {
             }
             recipes = getRecipeFromListId(categoryTmp);
         }
-        if(healthy != "Is Healthy" && healthy != "All"){
+        if(healthy != "Healthy" && healthy != "All"){
             List<String> healthyTmp = new ArrayList<String>();
             if(healthy == "Yes"){ healthy = "true"; } else if (healthy == "No"){healthy = "false";}
             for(Recipe recipe: recipes){
@@ -402,7 +402,7 @@ public final class RealmUtils {
             }
             recipes = getRecipeFromListId(categoryTmp);
         }
-        if(healthy != "Is Healthy" && healthy != "All"){
+        if(healthy != "Healthy" && healthy != "All"){
             List<String> healthyTmp = new ArrayList<String>();
             if(healthy == "Yes"){ healthy = "true"; } else if (healthy == "No"){healthy = "false";}
             for(Recipe recipe: recipes){
