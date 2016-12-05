@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,6 +45,10 @@ public class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
         TextView nameView = (TextView) listView.findViewById(R.id.recipeTitle);
         nameView.setText(values.get(position).getName());
         ImageView imageView = (ImageView) listView.findViewById(R.id.recipeSmallImage);
+
+        TextView ingredientView = (TextView) listView.findViewById(R.id.descriptionText);
+        ingredientView.setText(values.get(position).getDescription());
+
         if(values.get(position).getPhoto() != null){
             ConvertToBitmapTask cv = new ConvertToBitmapTask(values.get(position).getPhoto(),imageView);
             cv.execute(values.get(position).getId());
