@@ -7,25 +7,37 @@
     android:paddingTop="7dip"
     android:paddingBottom="7dip"
     android:orientation="horizontal"
-    android:gravity="center">
+    android:gravity="left">
 
     <LinearLayout
-        android:id="@+id/footer_layout"
+        android:id="@+id/ingredientLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:onClick="addIngredientRow (RecipeActivity)">
 
-        <ImageButton
-            android:layout_width="35dp"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="300dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:srcCompat="@android:drawable/ic_input_add"
+            app:srcCompat="@drawable/ic_add_green_24dp"
             android:id="@+id/addIngredient"
             android:layout_weight="1"
-            android:onClick="addIngredientRow (RecipeActivity)" />
+            android:maxWidth="30dp"
+            android:maxHeight="30dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:text="Add Ingredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/enabled_color"
+            android:layout_marginLeft="12dp"
+            android:id="@+id/addLabel"
+            android:layout_weight="1" />
 
     </LinearLayout>
 </RelativeLayout>
