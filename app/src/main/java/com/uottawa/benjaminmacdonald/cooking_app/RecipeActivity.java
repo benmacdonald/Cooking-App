@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.IngredientArrayAdapter;
@@ -81,6 +83,7 @@ public class RecipeActivity extends AppCompatActivity {
             recipeDescription.setText(recipe.getDescription());
             recipeInstruction.setText(recipe.getInstructions());
             healthyCheckBox.setChecked(recipe.getIsHealthy());
+            isFavourite = recipe.getIsFavourite();
             if(type != null){
                 recipeType.setText(type.getName());
             }
@@ -94,7 +97,10 @@ public class RecipeActivity extends AppCompatActivity {
             recipeId = recipe.getId();
             ingredientList = new ArrayList<Ingredient>();
             ingredientList.add(new Ingredient(recipeId));
+            isFavourite = false;
         }
+
+        //Add a back button to the action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -162,13 +168,29 @@ public class RecipeActivity extends AppCompatActivity {
         setListViewHeightBasedOnChildren(listView);
 
 
-        final LinearLayout addIngredientBtn = (LinearLayout) findViewById(R.id.ingredientLayout);
+        LinearLayout addIngredientBtn = (LinearLayout) findViewById(R.id.ingredientLayout);
         addIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 addIngredientRow();
             }
         });
+
+
+
+        //Set up onClickListeners for each delete button in the ListView
+       /* for (int i = 0; i < listView.getCount() - 1; i++) {
+            View rowView = listView.getChildAt(i);
+            if(rowView != null){
+                ImageButton deleteIngredientBtn = (ImageButton) rowView.findViewById(R.id.deleteIngredient);
+                deleteIngredientBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
+        }*/
 
         changeState(isEdit);
 
@@ -192,11 +214,9 @@ public class RecipeActivity extends AppCompatActivity {
         }
 
         //Set the icon if this recipe is a favourite
-        if(recipe.getIsFavourite()){
-            isFavourite = true;
+        if(isFavourite){
             favourite.setIcon(R.drawable.ic_favorite_white_24dp);
         } else {
-            isFavourite = false;
             favourite.setIcon(R.drawable.ic_favorite_border_white_24dp);
         }
 
@@ -274,7 +294,7 @@ public class RecipeActivity extends AppCompatActivity {
     //Method to add a new ingredient, creates a new row in the ingredient ListView
     public void addIngredientRow(){
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
-        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+        for(int i=0; i < listView.getCount() - 1; i++){
             View rowView = listView.getChildAt(i);
             if(rowView != null){
                 EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
@@ -292,6 +312,18 @@ public class RecipeActivity extends AppCompatActivity {
         setListViewHeightBasedOnChildren(listView);
 
     }
+
+    //Method used to delete the ingredient row where the button is located
+    public void deleteIngredientRowTEST(View button) {
+        ListView listView = (ListView) findViewById(R.id.ingredientListView);
+        int index = listView.getPositionForView((View) button.getParent());
+        Toast.makeText(RecipeActivity.this, index,
+                Toast.LENGTH_LONG).show();
+        Ingredient ingredient = ingredientList.remove(index);
+        ingredientArrayAdapter.notifyDataSetChanged();
+        realmUtils.deleteIngredient(ingredient.getId());
+    }
+
 
 
     //Enables editing for all components in the recipe acitivty if state == true
@@ -322,7 +354,7 @@ public class RecipeActivity extends AppCompatActivity {
             pictureFab.setVisibility(View.VISIBLE);
         }
 
-        for(int i=0; i<listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();i++){
+        for(int i=0; i<listView.getCount() - 1; i++){
             View rowView = listView.getChildAt(i);
             if(rowView != null){
                 EditText ingredientTitle = (EditText) rowView.findViewById(R.id.ingredientTitle);
@@ -333,11 +365,11 @@ public class RecipeActivity extends AppCompatActivity {
                 Spinner spinner = (Spinner) rowView.findViewById(R.id.measurementSpinner);
                 spinner.setEnabled(state);
 
-                ImageButton deleteIngredientButton = (ImageButton) findViewById(R.id.deleteIngredient);
+                ImageButton deleteIngredientButton = (ImageButton) rowView.findViewById(R.id.deleteIngredient);
+
                 if (!state)
                     deleteIngredientButton.setVisibility(View.GONE);
-                //The first ingredient should not be deletable
-                else if (state && i != 0)
+                else
                     deleteIngredientButton.setVisibility(View.VISIBLE);
             }
         }

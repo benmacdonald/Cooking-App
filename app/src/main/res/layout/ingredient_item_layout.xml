@@ -63,7 +63,9 @@
         android:maxHeight="24dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:background="?attr/selectableItemBackgroundBorderless" />
+
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:onClick="deleteIngredientRowTEST (RecipeActivity)" />
 
 
 </RelativeLayout>
