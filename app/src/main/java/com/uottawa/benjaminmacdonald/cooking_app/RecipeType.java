@@ -6,7 +6,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by BenjaminMacDonald on 2016-11-30.
+ * This class stores the recipe type's name and ID.
  */
 
 public class RecipeType extends RealmObject {
@@ -14,19 +14,15 @@ public class RecipeType extends RealmObject {
     String id = UUID.randomUUID().toString();
     String name;
 
-    //****************************** CONSTRUCTORS **************************************************
-
-    public  RecipeType(){
-
-    }
-
+    //****************************** CONSTRUCTOR ***************************************************
+    public  RecipeType(){} //Realm requires a constructor with no parameters.
     public RecipeType(String name){
         this.name = name;
     }
 
     //******************************* SETTERS AND GETTERS ******************************************
-
     public String getId (){ return id; }
+
     public String getName() {
         return name;
     }

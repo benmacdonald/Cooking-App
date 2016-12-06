@@ -24,13 +24,21 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
+/**
+ * This class is used to handle populating the main activity. This includes
+ * the favourites, the rest of recipes in a list, the toolbar, and the add button.
+ * This is also the home screen for the app.
+ */
+
 public class MainActivity extends AppCompatActivity {
+
     RealmResults<Recipe> favourites;
     RealmResults<Recipe> recipes;
     private RealmUtils realmUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,33 +58,12 @@ public class MainActivity extends AppCompatActivity {
         Realm.init(this);
         realmUtils = new RealmUtils(this);
 
-        //******************** WRITING TO REALM (FIRST STARTUP ONLY) *******************************
-//        List<Integer> drawableList = new ArrayList<Integer>();
-//        String[] favName = {"Cookies","Hamburger","Burrito"};
-//        drawableList.add(R.drawable.cookies);
-//        drawableList.add(R.drawable.hamburger);
-//        drawableList.add(R.drawable.burrito);
-//
-//        for (int i = 0; i<3; i++) {
-//            if(i < 3){
-//                if(i<2){
-//                    Recipe recipe = new Recipe();
-//                            realmUtils.createRecipe("Test "+i);
-//                }
-//            }
-//        }
-
-
-        //********************* Query favourite recipes and all recipes ****************************
-
+        //********************* QUERY FAVOURITE RECIPES AND ALL RECIPES ****************************
         favourites = realmUtils.queryFavouriteRecipes();
         recipes = realmUtils.queryAllNonFavourite();
 
-
         //*************************Setting up favourite view ***************************************
-
         GridView gridView = (GridView) findViewById(R.id.gridView);
-
 
         final FavouriteArrayAdapter favArrayAdapter = new FavouriteArrayAdapter(this, favourites);
         gridView.setAdapter(favArrayAdapter);
@@ -96,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //*************************Setting up recipe list view *************************************
+        //************************* SETTING UP THE RECIPE LIST VIEW ********************************
         ListView listView = (ListView) findViewById(R.id.recipeListView);
 
         final RecipeArrayAdapter recipeArrayAdapter = new RecipeArrayAdapter(this, recipes);
@@ -134,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         };
         recipes.addChangeListener(recipeChange);
 
-
     }
 
     @Override
@@ -159,27 +145,38 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //***************************** OUR METHODS **************************************
-
-    public Bitmap convertToBitMap(int drawable) {
-        return BitmapFactory.decodeResource(getResources(),
-                drawable);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.transition.slide_from_left, R.transition.slide_to_right);
     }
 
+    //***************************** OUR METHODS **************************************
+
+    /**
+     * Switches to the search activity.
+     */
     public void navToSearchAct() {
         startActivity(new Intent(this, SearchActivity.class));
         overridePendingTransition(R.transition.slide_from_right, R.transition.slide_to_left);
     }
 
+    /**
+     * Switches to the help activity.
+     */
     public void navToHelpAct() {
         startActivity(new Intent(this, HelpActivity.class));
     }
 
-
     //********************* STACK OVERFLOW METHODS *************************************************
 
-    //FROM STACKOVERFLOW http://stackoverflow.com/questions/5725745/horizontal-scrolling-grid-view
-
+    /**
+     * Sets the amount of rows depending on the amount of elements.
+     * Used for horizontal scrolling.
+     * Method taken from stackoverflow.
+     * source: http://stackoverflow.com/questions/5725745/horizontal-scrolling-grid-view
+     * @param gridView is the layout for the horizontal scrolling.
+     */
     private void setDynamicWidth(GridView gridView) {
         ListAdapter gridViewAdapter = gridView.getAdapter();
         if (gridViewAdapter == null) {
@@ -195,12 +192,4 @@ public class MainActivity extends AppCompatActivity {
         params.width = totalWidth;
         gridView.setLayoutParams(params);
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.transition.slide_from_left, R.transition.slide_to_right);
-    }
-
-
 }
