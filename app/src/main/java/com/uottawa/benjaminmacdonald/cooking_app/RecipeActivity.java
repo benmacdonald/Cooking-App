@@ -39,6 +39,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity class for viewing a Recipe
+ */
+
 public class RecipeActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 0;
@@ -518,7 +522,7 @@ public class RecipeActivity extends AppCompatActivity {
 
 
     // ************** STACKOVERFLOW METHODS FOR LAYOUT *******************
-    
+
     /**
      * Method for Setting the Height of the ListView dynamically.
      * Hack to fix the issue of not showing all the items of the ListView when placed inside a ScrollView

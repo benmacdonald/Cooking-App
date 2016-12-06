@@ -21,7 +21,7 @@ import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
 import java.util.List;
 
 /**
- * Created by BenjaminMacDonald on 2016-11-17.
+ * Adapter class used to display Recipes in the ListView found in the MainActivity
  */
 
 public class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
@@ -38,6 +38,7 @@ public class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
         bitmapCache = LruBitmapCache.getInstance();
     }
 
+    //Prepare the individual Recipes to be displayed in the list, and set their fields
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,6 +64,11 @@ public class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
 
     // *************************** SUBCLASS ASYNC CLASS ******************************************
 
+
+    /**
+     * Class used to convert an ImageView into a bitmap, so it can be used to populate the
+     * Favourite list
+     */
     protected class ConvertToBitmapTask extends AsyncTask<String, Void, Bitmap> {
         private ImageView imageView;
         private Recipe recipe;
