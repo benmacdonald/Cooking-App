@@ -272,13 +272,19 @@ public class RecipeActivity extends AppCompatActivity {
 
     // ************** OUR METHODS *******************************
 
-    //Method used to hide the keyboard. Called whenever the focus is changed from the EditText to another view
+    /**
+     * Hides the soft keyboard. Called whenever the focus is changed from the EditText to another view
+     * @param view is the current selected view
+     */
     public void hideKeyboard(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    //Method to add a new ingredient, creates a new row in the ingredient ListView
+
+    /**
+     * Method to add a new ingredient, creates a new row in the ingredient ListView
+     */
     public void addIngredientRow(){
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
         for(int i=0; i < listView.getCount() - 1; i++){
@@ -302,7 +308,10 @@ public class RecipeActivity extends AppCompatActivity {
 
 
 
-    //Enables editing for all components in the recipe acitivty if state == true
+    /**
+     * Enables or disables editing for all components in the recipe activity
+     * @param state If true, will enable editing for all components and disable if false
+     */
     public void changeState(Boolean state){
         ListView listView = (ListView) findViewById(R.id.ingredientListView);
         EditText recipeTitle = (EditText) findViewById(R.id.recipeTitle);
@@ -354,6 +363,11 @@ public class RecipeActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
+
+    /**
+     * Used to set all fields in this activity. If the user navigated to an existing recipe, all fields and information
+     * will be populated using values retrieved from the Realm database
+     */
     public void updateValues (){
         //********************** IMAGE **************************
         ImageView imageView = (ImageView) findViewById(R.id.recipeImage);
@@ -471,6 +485,10 @@ public class RecipeActivity extends AppCompatActivity {
 
 
     //Method that will resize the selected image to an appropriate scale and set it
+    /**
+     * Resizes an image to the appropriate scale, and then sets it to the main ImageView for the recipe
+     * @param image The bitmap of the image to be rescaled
+     */
     private void resizeAndSetImage(Bitmap image) {
         ImageView recipeImage = (ImageView) findViewById(R.id.recipeImage);
         double maxWidth = recipeImage.getWidth();
@@ -500,11 +518,13 @@ public class RecipeActivity extends AppCompatActivity {
 
 
     // ************** STACKOVERFLOW METHODS FOR LAYOUT *******************
-
-    /**** Method for Setting the Height of the ListView dynamically.
-     **** Hack to fix the issue of not showing all the items of the ListView
-     **** when placed inside a ScrollView  ****/
-    //http://stackoverflow.com/questions/18367522/android-list-view-inside-a-scroll-view
+    
+    /**
+     * Method for Setting the Height of the ListView dynamically.
+     * Hack to fix the issue of not showing all the items of the ListView when placed inside a ScrollView
+     * VIA: http://stackoverflow.com/questions/18367522/android-list-view-inside-a-scroll-view
+     * @param listView The ListView to be adjusted
+     */
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)
