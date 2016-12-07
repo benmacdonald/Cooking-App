@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by BenjaminMacDonald on 2016-11-27.
+ * Adapter class used populate the spinners
  */
 
 public class SpinnerArrayAdapter<String> extends ArrayAdapter<String> {
@@ -39,6 +39,8 @@ public class SpinnerArrayAdapter<String> extends ArrayAdapter<String> {
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         View spinnerView = super.getDropDownView(position,convertView,parent);
         TextView spinnerText = (TextView) spinnerView.findViewById(R.id.spinnerItemDrop);
+
+        //If there are no items in the spinner, it will be disabled
         if (position == 0) {
             spinnerText.setTextColor(Color.GRAY);
         } else {

@@ -5,33 +5,27 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.RecipeArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Adapters.SpinnerArrayAdapter;
 import com.uottawa.benjaminmacdonald.cooking_app.Utils.RealmUtils;
-import com.uottawa.benjaminmacdonald.cooking_app.R;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import io.realm.RealmResults;
-import io.realm.annotations.PrimaryKey;
 import mabbas007.tagsedittext.TagsEditText;
 
 /**
- * Created by BenjaminMacDonald on 2016-11-21.
+ * This class is used to handle the search activity, which includes the tool bar, search field, spinner and the list
+ * of recipes.
+ * It also handles the boolean operator search functionality
  */
 
 public class SearchActivity extends AppCompatActivity {
@@ -39,9 +33,9 @@ public class SearchActivity extends AppCompatActivity {
     List<String> categoryArray;
     List<String> healthyArray;
     List<Recipe> recipes = new ArrayList<Recipe>();
-    List<String> mIngre = new ArrayList<>();
-    List<String> oIngre = new ArrayList<>();
-    List<String> nIngre = new ArrayList<>();
+    List<String> mustIngredients = new ArrayList<>();
+    List<String> optionalIngredients = new ArrayList<>();
+    List<String> notIngredients = new ArrayList<>();
     String typeSpinnerValue;
     String categorySpinnerValue;
     String healthySpinnerValue;
@@ -53,7 +47,7 @@ public class SearchActivity extends AppCompatActivity {
 
     RecipeArrayAdapter recipeArrayAdapter;
 
-    //tags
+    //tag view and its requirements
     TagsEditText tags;
     TagsEditText.TagsEditListener tagsEditListener;
     Collection<String> ingredientList;
@@ -75,36 +69,38 @@ public class SearchActivity extends AppCompatActivity {
         recipeCategories = realmUtils.queryCategory();
         recipes = realmUtils.getAllRecipesAsList();
 
+        //initializing default search parameters
         typeSpinnerValue = "All";
         categorySpinnerValue = "All";
         healthySpinnerValue = "All";
 
-        //tags
+        //adds the listening to the tagEditText so on each new tag the result of the recipe can be updated on each tag
         tagsEditListener = new TagsEditText.TagsEditListener() {
             @Override
             public void onTagsChanged(Collection<String> collection) {
-                mIngre = new ArrayList<>();
-                oIngre = new ArrayList<>();
-                nIngre = new ArrayList<>();
+                mustIngredients = new ArrayList<>();
+                optionalIngredients = new ArrayList<>();
+                notIngredients = new ArrayList<>();
                 ingredientList = collection;
                 List<String> tmp = new ArrayList<>(ingredientList);
                 if(tmp.size() >= 1 && tmp.get(0) != "AND" && tmp.get(0) != "OR" && tmp.get(0) != "NOT"){
-                    mIngre.add(tmp.get(0));
+                    mustIngredients.add(tmp.get(0));
                 }
                 for(int i =0; i<tmp.size()-1; i ++){
                     if(tmp.get(i) == "AND"){
-                        mIngre.add(tmp.get(i+1));
+                        mustIngredients.add(tmp.get(i+1));
                     } else if(tmp.get(i) == "OR"){
-                        oIngre.add(tmp.get(i+1));
+                        optionalIngredients.add(tmp.get(i+1));
                     } else if (tmp.get(i) == "NOT"){
-                        nIngre.add(tmp.get(i+1));
+                        notIngredients.add(tmp.get(i+1));
                     }
                 }
-                updateSearchList(mIngre,oIngre,nIngre);
+                updateSearchList(mustIngredients, optionalIngredients, notIngredients);
             }
 
             @Override
             public void onEditingFinished() {
+                return;
             }
         };
         tags = (TagsEditText) findViewById(R.id.tagsEditText);
@@ -151,6 +147,8 @@ public class SearchActivity extends AppCompatActivity {
         healthy.setAdapter(filterHealthyAdapter);
 
         //************************** SETTING UP SPINNER SELECTORS **********************************
+
+        //setting the type spinner
         type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -158,7 +156,7 @@ public class SearchActivity extends AppCompatActivity {
                 if(ingredientList == null){
                     ingredientList = new ArrayList<String>();
                 }
-                updateSearchList(mIngre,oIngre,nIngre);
+                updateSearchList(mustIngredients, optionalIngredients, notIngredients);
 
             }
 
@@ -168,6 +166,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+        //setting the culture spinner
         culture.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -175,7 +174,7 @@ public class SearchActivity extends AppCompatActivity {
                     if(ingredientList == null){
                         ingredientList = new ArrayList<String>();
                     }
-                updateSearchList(mIngre,oIngre,nIngre);
+                updateSearchList(mustIngredients, optionalIngredients, notIngredients);
             }
 
             @Override
@@ -184,6 +183,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+        //setting the healthy selector
         healthy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -191,17 +191,17 @@ public class SearchActivity extends AppCompatActivity {
                     if(ingredientList == null){
                         ingredientList = new ArrayList<String>();
                     }
-                    updateSearchList(mIngre,oIngre,nIngre);
+                    updateSearchList(mustIngredients, optionalIngredients, notIngredients);
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
         //*************************Setting up recipe list view **************************************
+
         ListView listView = (ListView) findViewById(R.id.recipeListView);
 
         recipeArrayAdapter = new RecipeArrayAdapter(this,recipes);
@@ -218,6 +218,15 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+
+    // ********************************** METHODS **************************************************
+
+
+    /**
+     * method to handle the menu items being selected
+     * @param item - the item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
@@ -230,11 +239,13 @@ public class SearchActivity extends AppCompatActivity {
         return  super.onOptionsItemSelected(item);
     }
 
-
-    // ********* METHODS *************************
-
-    public void onClick(View v) {
-        final int id = v.getId();
+    /**
+     * handles the click of boolean operators and adds them to the tag view
+     *
+     * @param view
+     */
+    public void booleanButtonClick(View view) {
+        final int id = view.getId();
         switch (id) {
             case R.id.andButton:
                 tags.setText("AND");
@@ -247,15 +258,20 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * updates the list view with the new search results
+     *
+     * @param mIngre - the ingredients that are necessary (AND)
+     * @param oIngre - the ingredients that are optional (OR)
+     * @param nIngre - the ingredients that are excluded (NOT)
+     */
     public void updateSearchList(List<String> mIngre, List<String> oIngre,
                                  List<String> nIngre) {
-        if(mIngre != null && oIngre != null && nIngre != null){
-//            List<Recipe> tmp = realmUtils.getRecipeFromIngredients(collection,typeSpinnerValue,categorySpinnerValue,healthySpinnerValue);
-            List<Recipe> tmp = realmUtils.getRecipeFromIngredientsBoolean(mIngre,oIngre,nIngre,typeSpinnerValue,categorySpinnerValue,healthySpinnerValue);
+        if (mIngre != null && oIngre != null && nIngre != null) {
+            List<Recipe> tmp = realmUtils.getRecipeFromIngredientsBoolean(mIngre, oIngre, nIngre, typeSpinnerValue, categorySpinnerValue, healthySpinnerValue);
             recipes.clear();
             recipes.addAll(tmp);
             recipeArrayAdapter.notifyDataSetChanged();
         }
     }
-
 }

@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by BenjaminMacDonald on 2016-11-27.
+ * Adapter class used to display ingredients in the ListView found in the RecipeActivity
  */
 
 public class IngredientArrayAdapter extends ArrayAdapter<Ingredient> {
@@ -50,15 +50,18 @@ public class IngredientArrayAdapter extends ArrayAdapter<Ingredient> {
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item_expanded);
         spinner.setAdapter(spinnerArrayAdapter);
         String unitValue = values.get(position).getUnitOfMeasurement();
+
+        //If the unit value has been set by the user, set the selection of the spinner accordingly
         if(unitValue != "Units" && unitValue != ""){
             spinner.setSelection(measurementUnit.indexOf(values.get(position).getUnitOfMeasurement()));
         }
         spinner.requestLayout(); //used to fix layout issues when manually selecting spinner element
 
-
+        //Set the name of the ingredient
         EditText nameView = (EditText) listView.findViewById(R.id.ingredientTitle);
         nameView.setText(values.get(position).getName());
 
+        //Set an onClickListener for the delete button
         ImageButton deleteIngredientBtn = (ImageButton) listView.findViewById(R.id.deleteIngredient);
         deleteIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +75,11 @@ public class IngredientArrayAdapter extends ArrayAdapter<Ingredient> {
         return listView;
     }
 
+
+    /**
+     * Deletes an item in the ListView and ArrayAdapter at the given position
+     * @param position The position of the item to delete
+     */
     public void delete(int position){
         values.remove(position);
         notifyDataSetChanged();
