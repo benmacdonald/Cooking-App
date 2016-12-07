@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class RecipeActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 0;
@@ -219,10 +220,18 @@ public class RecipeActivity extends AppCompatActivity {
 
         if(id == android.R.id.home){
             //check if recipe is tmp
-            //TODO:: check if default then delete
             recipe = realmUtils.getRecipeFromID(recipeId);
-            if(recipe.getName().equals("tmp-bmat")){
+            try {
+                if(recipe.getName() != null){
+                    if(recipe.getName().equals("tmp-bmat")){
+                        realmUtils.deleteRecipe(recipeId);
+                        Toast.makeText(this,"Recipe might not have saved",Toast.LENGTH_SHORT);
+                        return false;
+                    }
+                }
+            } catch (NullPointerException e){
                 realmUtils.deleteRecipe(recipeId);
+                Toast.makeText(this,"Recipe might not have saved",Toast.LENGTH_SHORT);
             }
         }
 
