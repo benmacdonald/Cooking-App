@@ -103,4 +103,5 @@ public class Recipe extends RealmObject {
     }
 
     public void setRecipeCategory(String recipeCategory) { this.recipeCategory = recipeCategory; }
+
 }

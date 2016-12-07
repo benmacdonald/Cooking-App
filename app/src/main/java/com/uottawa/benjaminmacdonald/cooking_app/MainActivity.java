@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getBaseContext(), RecipeActivity.class);
                 intent.putExtra("RECIPE_ID", favourites.get(position).getId());
                 startActivity(intent);
-
             }
         });
 

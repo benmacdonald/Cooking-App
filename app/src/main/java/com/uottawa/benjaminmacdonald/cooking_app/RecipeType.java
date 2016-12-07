@@ -30,4 +30,5 @@ public class RecipeType extends RealmObject {
     public void setName(String name) {
         this.name = name;
     }
+
 }

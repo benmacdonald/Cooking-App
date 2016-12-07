@@ -18,7 +18,6 @@ public class Ingredient extends RealmObject {
     private String unitOfMeasurement;
     private String recipeId;
 
-
     //*************************** CONSTRUCTOR ******************************************************
     public Ingredient(String name, Double amount, String unitOfMeasurement){
         this.name = name;
@@ -65,6 +64,7 @@ public class Ingredient extends RealmObject {
     }
 
     public void setUnitOfMeasurement(String unitOfMeasurement) { this.unitOfMeasurement = unitOfMeasurement; }
+
     public String getRecipeId() { return recipeId;}
 
     public void setRecipeId() { this.recipeId = recipeId; }
