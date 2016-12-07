@@ -19,7 +19,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
- * Created by BenjaminMacDonald on 2016-11-11.
+ * Adapter class used to display favourite recipes on the favourite list in the MainActivity
  */
 
 public class FavouriteArrayAdapter extends ArrayAdapter<Recipe>  { //CHANGE TO RECIPE
@@ -50,11 +50,15 @@ public class FavouriteArrayAdapter extends ArrayAdapter<Recipe>  { //CHANGE TO R
 
     // *************************** SUBCLASS ASYNC CLASS ******************************************
 
+    /**
+     * Class used to convert an ImageView into a bitmap, so it can be used to populate the
+     * Favourite list
+     */
     protected class ConvertToBitmapTask extends AsyncTask<String, Void, Bitmap> {
         private ImageView imageView;
         private byte[] bytes;
 
-        public  ConvertToBitmapTask(byte[] bytes, ImageView imageView){
+        public ConvertToBitmapTask(byte[] bytes, ImageView imageView){
             this.imageView = imageView;
             this.bytes = bytes;
         }
