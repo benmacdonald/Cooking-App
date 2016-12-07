@@ -22,30 +22,50 @@ public class HelpActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
     }
 
+    /**
+     * Starts FAQ activity
+     * @param view
+     */
     public void getFAQ(View view)
     {
         Intent intent = new Intent(this, SubactivityFAQ.class);
         startActivity(intent);
     }
 
+    /**
+     * Starts searching help activity
+     * @param view
+     */
     public void getSearchHelp(View view)
     {
         Intent intent = new Intent(this, SubactivitySearchHelp.class);
         startActivity(intent);
     }
 
+    /**
+     * Starts favoriting help activity
+     * @param view
+     */
     public void getFavorite(View view)
     {
         Intent intent = new Intent(this, SubactivityFavorite.class);
         startActivity(intent);
     }
 
+    /**
+     * Starts help activity for adding your own recipe
+     * @param view
+     */
     public void getAddOwnRecipe(View view)
     {
         Intent intent = new Intent(this, SubactivityAddOwnRecipe.class);
         startActivity(intent);
     }
 
+    /**
+     * Starts contact page activity.
+     * @param view
+     */
     public void getContact(View view)
     {
         Intent intent = new Intent(this, SubactivityContact.class);

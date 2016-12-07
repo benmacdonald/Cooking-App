@@ -46,11 +46,16 @@
                 android:value=".MainActivity" />
         </activity>
 
-        <activity android:name=".HelpSubActivities.SubactivityFAQ" />
-        <activity android:name=".HelpSubActivities.SubactivitySearchHelp" />
-        <activity android:name=".HelpSubActivities.SubactivityFavorite" />
-        <activity android:name=".HelpSubActivities.SubactivityAddOwnRecipe" />
-        <activity android:name=".HelpSubActivities.SubactivityContact" />
+        <activity android:name=".HelpSubActivities.SubactivityFAQ"
+            android:parentActivityName=".HelpActivity"/>
+        <activity android:name=".HelpSubActivities.SubactivitySearchHelp"
+            android:parentActivityName=".HelpActivity"/>
+        <activity android:name=".HelpSubActivities.SubactivityFavorite"
+            android:parentActivityName=".HelpActivity"/>
+        <activity android:name=".HelpSubActivities.SubactivityAddOwnRecipe"
+            android:parentActivityName=".HelpActivity"/>
+        <activity android:name=".HelpSubActivities.SubactivityContact"
+            android:parentActivityName=".HelpActivity"/>
 
         <activity
             android:name=".SearchActivity"
