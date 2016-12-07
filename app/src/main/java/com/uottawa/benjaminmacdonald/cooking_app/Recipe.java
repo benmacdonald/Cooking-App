@@ -6,7 +6,10 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by BenjaminMacDonald on 2016-11-18.
+ * This class stores an recipe's attributes: name of recipe, whether it's healthy or not,
+ * the preparation time, whether it's a favourite recipe or not, a photo stored in a byte array,
+ * the description, the instructions to prepare it, the recipe type, the recipe category, and
+ * the recipe ID.
  */
 
 public class Recipe extends RealmObject {
@@ -22,8 +25,7 @@ public class Recipe extends RealmObject {
     private String recipeType;
     private String recipeCategory;
 
-
-    //******* CONSTRUCTORS ****************
+    //*************************** CONSTRUCTOR ******************************************************
     public Recipe(String name, Boolean isHealthy, Double preparationTime, Boolean isFavourite, byte[] photo){
         this.name = name;
         this.isHealthy = isHealthy;
@@ -37,45 +39,55 @@ public class Recipe extends RealmObject {
         isFavourite = false;
     }
 
-
-    //********* GETTERS AND SETTERS *********
-
+    //*************************** SETTERS AND GETTERS **********************************************
     public String getId(){
         return id;
     }
+
     public void setName(String name){
         this.name = name;
     }
+
     public String getName(){
         return name;
     }
+
     public void setIsHealthy(Boolean isHealthy){
         this.isHealthy = isHealthy;
     }
+
     public Boolean getIsHealthy(){
         return isHealthy;
     }
-    public void setPreparationTime(Double preparationTime){
-        this.preparationTime = preparationTime;
-    }
+
+    public void setPreparationTime(Double preparationTime){ this.preparationTime = preparationTime; }
+
     public Double getPreparationTime(){
         return preparationTime;
     }
+
     public void setIsFavourite(Boolean isFavourite){
         this.isFavourite = isFavourite;
     }
+
     public Boolean getIsFavourite(){
         return isFavourite;
     }
+
     public void setPhoto(byte[] photo){
         this.photo = photo;
     }
+
     public byte[] getPhoto(){
         return photo;
     }
+
     public String getDescription() { return description; }
+
     public void setDescription(String description) { this.description = description; }
+
     public String getInstructions() { return instructions; }
+
     public void setInstructions(String instructions) { this.instructions = instructions; }
 
     public String getRecipeType() {
@@ -90,7 +102,6 @@ public class Recipe extends RealmObject {
         return recipeCategory;
     }
 
-    public void setRecipeCategory(String recipeCategory) {
-        this.recipeCategory = recipeCategory;
-    }
+    public void setRecipeCategory(String recipeCategory) { this.recipeCategory = recipeCategory; }
+
 }

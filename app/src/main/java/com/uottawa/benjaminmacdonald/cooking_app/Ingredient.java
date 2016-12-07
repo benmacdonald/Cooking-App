@@ -6,7 +6,8 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by BenjaminMacDonald on 2016-11-18.
+ * This class stores an ingredient's attributes: name of ingredient,
+ * amount of ingredient, the unit of measurement, and the recipe ID that it's associated to.
  */
 
 public class Ingredient extends RealmObject {
@@ -17,9 +18,7 @@ public class Ingredient extends RealmObject {
     private String unitOfMeasurement;
     private String recipeId;
 
-
-    //********** CONSTRUCTOR ************
-
+    //*************************** CONSTRUCTOR ******************************************************
     public Ingredient(String name, Double amount, String unitOfMeasurement){
         this.name = name;
         this.amount = amount;
@@ -39,7 +38,7 @@ public class Ingredient extends RealmObject {
         this.unitOfMeasurement = "";
     }
 
-
+    //*************************** SETTERS AND GETTERS **********************************************
     public String getId() {
         return id;
     }
@@ -64,9 +63,8 @@ public class Ingredient extends RealmObject {
         return unitOfMeasurement;
     }
 
-    public void setUnitOfMeasurement(String unitOfMeasurement) {
-        this.unitOfMeasurement = unitOfMeasurement;
-    }
+    public void setUnitOfMeasurement(String unitOfMeasurement) { this.unitOfMeasurement = unitOfMeasurement; }
+
     public String getRecipeId() { return recipeId;}
 
     public void setRecipeId() { this.recipeId = recipeId; }
