@@ -53,6 +53,7 @@ public class RecipeActivity extends AppCompatActivity {
     private String recipeId;
     private Uri cameraUri;
     private File photoFile;
+    private boolean isTemorary = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         //If the user is viewing an already existing recipe, populate it with its details
         if(!recipeId.equals("")){
+            isTemorary = false;
             isEdit = false;
             recipe = realmUtils.getRecipeFromID(recipeId);
             ingredientList = realmUtils.getIngredientsFromRecipeID(recipeId);
@@ -96,7 +98,7 @@ public class RecipeActivity extends AppCompatActivity {
         } else {
             isEdit = true;
             getSupportActionBar().setTitle("New Recipe");
-            recipe = realmUtils.createRecipe("tmp-bmat");
+            recipe = realmUtils.createRecipe("");
             recipeId = recipe.getId();
             ingredientList = new ArrayList<Ingredient>();
             ingredientList.add(new Ingredient(recipeId));
@@ -220,18 +222,8 @@ public class RecipeActivity extends AppCompatActivity {
 
         if(id == android.R.id.home){
             //check if recipe is tmp
-            recipe = realmUtils.getRecipeFromID(recipeId);
-            try {
-                if(recipe.getName() != null){
-                    if(recipe.getName().equals("tmp-bmat")){
-                        realmUtils.deleteRecipe(recipeId);
-                        Toast.makeText(this,"Recipe might not have saved",Toast.LENGTH_SHORT);
-                        return false;
-                    }
-                }
-            } catch (NullPointerException e){
+            if(isTemorary == true){
                 realmUtils.deleteRecipe(recipeId);
-                Toast.makeText(this,"Recipe might not have saved",Toast.LENGTH_SHORT);
             }
         }
 
@@ -431,6 +423,7 @@ public class RecipeActivity extends AppCompatActivity {
         //************************ ACCESS REALM AND UPDATE ********************
         realmUtils.updateRecipe(recipeId,name,isHealthy,isFavourite,photo,description,instruction,typeId,catId);
         realmUtils.saveIngredient(ingredientList);
+        isTemorary = false;
         //********************** CHECK IF CACHE HAS OLD IMAGE ******************************************
         LruBitmapCache bitmapCache = LruBitmapCache.getInstance();
         Bitmap bitmap = bitmapCache.get(recipeId);
