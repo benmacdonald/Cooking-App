@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cooking-App</string>
+    <string name="app_name">Cook It</string>
     <string name="action_settings">Settings</string>
     <string name="FAQ">Frequently Asked Questions</string>
     <string name="Search">Searching a Recipe</string>
